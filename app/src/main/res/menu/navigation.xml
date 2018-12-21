@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_new"
+        android:icon="@drawable/nav_new"
+        android:title="最近" />
+
+    <item
+        android:id="@+id/nav_file"
+        android:icon="@drawable/nav_file"
+        android:title="文件" />
+    <item
+        android:id="@+id/nav_add"
+        android:icon="@drawable/nav_add"
+        android:title="添加" />
+    <item
+        android:id="@+id/nav_enjoy"
+        android:icon="@drawable/nav_love"
+        android:title="收藏" />
+    <item
+        android:id="@+id/nav_me"
+        android:icon="@drawable/nav_me"
+        android:title="我" />
+
+</menu>
