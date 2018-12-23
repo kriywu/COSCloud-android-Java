@@ -1,4 +1,4 @@
-package com.easylink.cloud.util;
+package com.easylink.cloud.control;
 
 import android.app.Activity;
 

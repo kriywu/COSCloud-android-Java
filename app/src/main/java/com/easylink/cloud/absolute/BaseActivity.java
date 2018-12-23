@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.easylink.cloud.util.ActivityCollector;
+import com.easylink.cloud.control.ActivityCollector;
 
 public abstract class BaseActivity extends AppCompatActivity {
     @Override

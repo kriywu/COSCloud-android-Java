@@ -1,22 +1,19 @@
-package com.easylink.cloud;
+package com.easylink.cloud.control;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
+import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseActivity;
-import com.easylink.cloud.control.AddFragment;
-import com.easylink.cloud.control.EnjoyFragment;
-import com.easylink.cloud.control.FileFragment;
-import com.easylink.cloud.control.MeFragment;
-import com.easylink.cloud.control.NewFragment;
+import com.easylink.cloud.control.fragment.EnjoyFragment;
+import com.easylink.cloud.control.fragment.UploadFragment;
+import com.easylink.cloud.control.fragment.FileFragment;
+import com.easylink.cloud.control.fragment.MeFragment;
+import com.easylink.cloud.control.fragment.NewFragment;
 
 
 public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -69,7 +66,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     fragments[index] = FileFragment.newInstance(this);
                     break;
                 case 2:
-                    fragments[index] = AddFragment.newInstance(this);
+                    fragments[index] = UploadFragment.newInstance(this);
                     break;
                 case 3:
                     fragments[index] = EnjoyFragment.newInstance(this);

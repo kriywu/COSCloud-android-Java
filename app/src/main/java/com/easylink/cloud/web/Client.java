@@ -1,11 +1,11 @@
-package com.easylink.cloud.control;
+package com.easylink.cloud.web;
 
 import android.content.Context;
 import android.util.Log;
 
 
-import com.easylink.cloud.modle.EFile;
-import com.easylink.cloud.util.Constant;
+import com.easylink.cloud.modle.CloudFile;
+import com.easylink.cloud.modle.Constant;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -25,14 +25,10 @@ import com.tencent.cos.xml.transfer.TransferStateListener;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
-import java.io.File;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
-import static com.easylink.cloud.util.Constant.secretKey;
+import static com.easylink.cloud.modle.Constant.secretKey;
 
 public class Client {
     private static Client client = null;
@@ -40,7 +36,7 @@ public class Client {
 
     private Client(Context context) {
         CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
-                .setAppidAndRegion(Constant.appId,Constant.region)
+                .setAppidAndRegion(Constant.appId, Constant.region)
                 .setDebuggable(true)
                 .builder();
         QCloudCredentialProvider credentialProvider = new ShortTimeCredentialProvider(Constant.secretId, secretKey, 3000);
@@ -55,13 +51,12 @@ public class Client {
     }
 
     /**
-     *
      * @param bucket
-     * @param prefix 检索内容的而前缀，KEY的前缀
+     * @param prefix    检索内容的而前缀，KEY的前缀
      * @param delimiter 定界符 如果定界符为null，则查询所有KEY包含prefix的内容
      */
-    public List<EFile> getCurrentFiles(String bucket, String prefix, Character delimiter) {
-        List<EFile> files = new LinkedList<>();
+    public List<CloudFile> getContentAndPath(String bucket, String prefix, Character delimiter) {
+        List<CloudFile> files = new LinkedList<>();
         final GetBucketRequest getBucketRequest = new GetBucketRequest(bucket);
         getBucketRequest.setPrefix(prefix); // 文件夹或文件前缀
         getBucketRequest.setMaxKeys(1000); //单次返回的最大数量
@@ -72,35 +67,58 @@ public class Client {
             ListBucket listBucket = getBucketResult.listBucket;
             // 返回目录结构
             List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
-            for(ListBucket.CommonPrefixes contents : list){
-                Log.d("Client",list.size()+"");
-                files.add(new EFile(contents.prefix,contents.prefix,Constant.DIR));
+            for (ListBucket.CommonPrefixes contents : list) {
+                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
             }
 
-            // 文件夹
+            // 目录
             List<ListBucket.Contents> list2 = listBucket.contentsList;
-            for(ListBucket.Contents contents : list2){
-                EFile file = new EFile(contents.key,contents.key,Constant.FILE);
+
+            for (ListBucket.Contents contents : list2) {
+                if (contents.key.equals(prefix)) continue;
+
+                CloudFile file = new CloudFile(contents.key, contents.key, Constant.FILE);
                 file.setLastModify(contents.lastModified);
                 file.setSize(contents.size);
                 files.add(file);
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             return files;
         }
 
     }
 
-    public void upload(File file) {
+    public List<CloudFile> getPath(String bucket, String prefix, Character delimiter) {
+        List<CloudFile> files = new LinkedList<>();
+        final GetBucketRequest getBucketRequest = new GetBucketRequest(bucket);
+        getBucketRequest.setPrefix(prefix); // 文件夹或文件前缀
+        getBucketRequest.setMaxKeys(1000); //单次返回的最大数量
+        getBucketRequest.setDelimiter(delimiter); //检索到下一级文件夹
+        // 使用同步方法
+        try {
+            GetBucketResult getBucketResult = cosXmlService.getBucket(getBucketRequest);
+            ListBucket listBucket = getBucketResult.listBucket;
+            // 返回目录结构
+            List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
+            for (ListBucket.CommonPrefixes contents : list) {
+                Log.d("Client", list.size() + "");
+                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return files;
+        }
+    }
+
+    public void upload(String bucket, String key, String path) {
         TransferConfig transferConfig = new TransferConfig.Builder().build();// 设置是否分片，分片的大小等
         //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService, transferConfig);
-        String cosPath = file.getName(); //KEY
-        String srcPath = "本地文件的绝对路径"; // 如 srcPath=Environment.getExternalStorageDirectory().getPath() + "/test.txt";
-        String uploadId = "分片上传的UploadId";//用于续传,若无,则为null.
-        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(Constant.bucket, cosPath, srcPath, uploadId); //上传文件
+        String uploadId = key + System.currentTimeMillis();//用于续传,若无,则为null.
+        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, key, path, uploadId); //上传文件
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
             @Override

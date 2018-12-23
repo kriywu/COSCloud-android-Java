@@ -4,14 +4,14 @@ import android.content.Intent;
 
 import java.util.Date;
 
-public class EFile {
+public class CloudFile {
     private String state; // 文件类型 TEXT MP3 MP4 ...
     private long size; // 文件大小
     private String name;
     private String key;
     private String lastModify;
 
-    public EFile(String key,String name , String state){
+    public CloudFile(String key, String name , String state){
         this.key = key;
         this.name = name;
         this.state = state;

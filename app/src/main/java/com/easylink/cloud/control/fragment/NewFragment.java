@@ -1,4 +1,4 @@
-package com.easylink.cloud.control;
+package com.easylink.cloud.control.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -9,28 +9,31 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.TextView;
+
+import com.easylink.cloud.R;
+import com.jaygoo.widget.RangeSeekBar;
 
 @SuppressLint("ValidFragment")
-public class EnjoyFragment extends Fragment {
+public class NewFragment extends Fragment {
     private Context context;
+    private RangeSeekBar rangeSeekBar;
+    @Nullable
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        TextView textView = new TextView(getContext());
-        textView.setText(getClass().getName());
-        WebView webView = new WebView(context);
-        webView.loadUrl("http://baidu.com");
-        return webView;
+        View view = inflater.inflate(R.layout.fragment_new,container,false);
+        rangeSeekBar = view.findViewById(R.id.rsb_range);
+
+        return view;
     }
-    private EnjoyFragment(Context context){
+    private NewFragment(Context context){
         this.context = context;
     }
 
-    public static EnjoyFragment newInstance(Context context) {
+    public static NewFragment newInstance(Context context) {
 
         Bundle args = new Bundle();
 
-        EnjoyFragment fragment = new EnjoyFragment(context);
+        NewFragment fragment = new NewFragment(context);
         fragment.setArguments(args);
         return fragment;
     }
