@@ -55,15 +55,15 @@ public class UploadFragment extends Fragment {
         this.context = context;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case Constant.IMAGE_REQUEST_CODE:
-                break;
-            case Constant.VIDEO_REQUEST_CODE:
-                break;
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        switch (requestCode) {
+//            case Constant.IMAGE_REQUEST_CODE:
+//                break;
+//            case Constant.VIDEO_REQUEST_CODE:
+//                break;
+//        }
+//    }
 
 }

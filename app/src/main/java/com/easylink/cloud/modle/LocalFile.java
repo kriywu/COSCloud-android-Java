@@ -1,12 +1,15 @@
 package com.easylink.cloud.modle;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class LocalFile implements Comparable {
-    private String path;
+    protected String path;
+    protected float size;
 
-    public LocalFile(String path){
+    public LocalFile(String path, float size) {
         this.path = path;
+        this.size = size;
     }
 
     public String getPath() {
@@ -15,6 +18,18 @@ public class LocalFile implements Comparable {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public float getSize() {
+        return size;
+    }
+
+    public void setSize(float size) {
+        this.size = size;
+    }
+
+    public float getSizeFormat() {
+        return size / (1024 * 1024.0f);
     }
 
     @Override

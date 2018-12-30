@@ -2,6 +2,7 @@ package com.easylink.cloud.web;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.easylink.cloud.modle.CloudFile;
@@ -16,6 +17,9 @@ import com.tencent.cos.xml.model.CosXmlRequest;
 import com.tencent.cos.xml.model.CosXmlResult;
 import com.tencent.cos.xml.model.bucket.GetBucketRequest;
 import com.tencent.cos.xml.model.bucket.GetBucketResult;
+import com.tencent.cos.xml.model.object.DeleteMultiObjectRequest;
+import com.tencent.cos.xml.model.object.DeleteObjectRequest;
+import com.tencent.cos.xml.model.object.PutObjectACLResult;
 import com.tencent.cos.xml.model.tag.ListBucket;
 import com.tencent.cos.xml.transfer.COSXMLUploadTask;
 import com.tencent.cos.xml.transfer.TransferConfig;
@@ -51,6 +55,8 @@ public class Client {
     }
 
     /**
+     * 同步
+     *
      * @param bucket
      * @param prefix    检索内容的而前缀，KEY的前缀
      * @param delimiter 定界符 如果定界符为null，则查询所有KEY包含prefix的内容
@@ -60,7 +66,7 @@ public class Client {
         final GetBucketRequest getBucketRequest = new GetBucketRequest(bucket);
         getBucketRequest.setPrefix(prefix); // 文件夹或文件前缀
         getBucketRequest.setMaxKeys(1000); //单次返回的最大数量
-        getBucketRequest.setDelimiter(delimiter); //检索到下一级文件夹
+        if (delimiter != null) getBucketRequest.setDelimiter(delimiter); //检索到下一级文件夹
         // 使用同步方法
         try {
             GetBucketResult getBucketResult = cosXmlService.getBucket(getBucketRequest);
@@ -90,6 +96,15 @@ public class Client {
 
     }
 
+    /**
+     * 同步
+     *
+     * @param bucket
+     * @param prefix
+     * @param delimiter
+     * @return
+     */
+
     public List<CloudFile> getPath(String bucket, String prefix, Character delimiter) {
         List<CloudFile> files = new LinkedList<>();
         final GetBucketRequest getBucketRequest = new GetBucketRequest(bucket);
@@ -113,11 +128,19 @@ public class Client {
         }
     }
 
+    /**
+     * 异步
+     *
+     * @param bucket
+     * @param key
+     * @param path
+     */
     public void upload(String bucket, String key, String path) {
         TransferConfig transferConfig = new TransferConfig.Builder().build();// 设置是否分片，分片的大小等
         //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService, transferConfig);
-        String uploadId = key + System.currentTimeMillis();//用于续传,若无,则为null.
+        String uploadId = null;//key + System.currentTimeMillis();//用于续传,若无,则为null
+
         COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, key, path, uploadId); //上传文件
         //设置上传进度回调
         cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
@@ -127,6 +150,7 @@ public class Client {
                 Log.d("TEST", String.format("progress = %d%%", (int) progress));
             }
         });
+
         //设置返回结果回调
         cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
@@ -144,6 +168,62 @@ public class Client {
             @Override
             public void onStateChanged(TransferState state) {
                 Log.d("TEST", "Task state:" + state.name());
+            }
+        });
+
+
+    }
+
+    /**
+     * 异步
+     *
+     * @param bucket
+     * @param key
+     */
+    public void delObject(String bucket, String key) {
+        DeleteObjectRequest request = new DeleteObjectRequest(bucket, key);
+        cosXmlService.deleteObjectAsync(request, new CosXmlResultListener() {
+            @Override
+            public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+            }
+
+            @Override
+            public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
+            }
+        });
+    }
+
+    /**
+     * 异步
+     * 删除文件夹文件
+     *
+     * @param bucket
+     * @param prefix
+     */
+
+    public void delPrefixObject(String bucket, String prefix) {
+        //QueryList.Builder builder = new QueryList.Builder()
+    }
+
+    /**
+     * 异步
+     * 删除多个文件
+     *
+     * @param bucket
+     * @param lists
+     */
+    public void delMultiObject(String bucket, List<String> lists) {
+        DeleteMultiObjectRequest request = new DeleteMultiObjectRequest(bucket, lists);
+        request.setQuiet(true);
+        cosXmlService.deleteMultiObjectAsync(request, new CosXmlResultListener() {
+            @Override
+            public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+                Log.d("Client", "del multi OK");
+            }
+
+            @Override
+            public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
+                Log.d("Clent", "del multi failed");
             }
         });
     }

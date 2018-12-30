@@ -28,7 +28,7 @@ public class UploadService extends Service {
         prefix = intent.getStringExtra(Constant.EXTRA_PREFIX);
 
         for (String p : paths) {
-            Client.getClient(this).upload(Constant.bucket, prefix + new File(p).getName(), paths.get(0)); // bucket key path
+            Client.getClient(this).upload(Constant.bucket, prefix + new File(p).getName(), p); // bucket key path
         }
 
 

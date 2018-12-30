@@ -29,7 +29,9 @@ public class Constant {
     final public static String EXTRA_VIDEO = "extra_video";
     final public static String EXTRA_MUSIC = "extra_music";
     final public static String EXTRA_PHOTO = "extra_photo";
-    final public static String EXTRA_FILE = "extra+photo";
+    final public static String EXTRA_DOC = "doc";
+    final public static String EXTRA_RAR = "rar";
+    final public static String EXTRA_APK = "apk";
 
 
 }

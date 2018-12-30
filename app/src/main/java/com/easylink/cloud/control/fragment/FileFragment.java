@@ -129,7 +129,6 @@ public class FileFragment extends Fragment implements iQueryList, View.OnClickLi
         switch (v.getId()) {
             case R.id.fa_back:
                 if (stack.size() == 1) return;
-                Log.d("file fragment", stack.peek() + "出栈");
 
                 swipeRefreshLayout.setRefreshing(true);
                 stack.pop();

@@ -70,5 +70,4 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
         }
 
     }
-
 }

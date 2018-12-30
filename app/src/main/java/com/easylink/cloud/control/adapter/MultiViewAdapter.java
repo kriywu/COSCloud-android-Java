@@ -13,13 +13,13 @@ import android.widget.TextView;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BindHolder;
-import com.easylink.cloud.control.PickPhotoActivity;
+import com.easylink.cloud.control.FilePickActivity;
 import com.easylink.cloud.modle.Constant;
 
 public class MultiViewAdapter extends RecyclerView.Adapter<BindHolder> {
 
-    private String[] titles = {"上传照片", "上传视频", "上传音乐", "上传文件"};
-    private int[] drawables = {R.drawable.icon_photo, R.drawable.icon_mv, R.drawable.icon_music, R.drawable.icon_file};
+    private String[] titles = {"照片", "视频", "音乐", "文档", "压缩包", "APK"};
+    private int[] drawables = {R.drawable.icon_photo, R.drawable.icon_mv, R.drawable.icon_music, R.drawable.icon_file, R.drawable.icon_rar, R.drawable.icon_apk};
     private Context context;
 
 
@@ -66,22 +66,29 @@ public class MultiViewAdapter extends RecyclerView.Adapter<BindHolder> {
 
         @Override
         public void onClick(View v) {
+            Intent intent = new Intent(context, FilePickActivity.class);
             switch (index) {
                 case 0:
-                    Intent intent = new Intent(context, PickPhotoActivity.class);
-                    intent.putExtra(Constant.UPLOAD_TYPE,Constant.EXTRA_PHOTO);
-                    ((Activity) context).startActivityForResult(intent, Constant.IMAGE_REQUEST_CODE);
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_PHOTO);
                     break;
                 case 1:
-                    Intent intent2 = new Intent(context, PickPhotoActivity.class);
-                    intent2.putExtra(Constant.UPLOAD_TYPE,Constant.EXTRA_VIDEO);
-                    ((Activity) context).startActivityForResult(intent2, Constant.VIDEO_REQUEST_CODE);
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_VIDEO);
                     break;
                 case 2:
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_MUSIC);
                     break;
                 case 3:
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_DOC);
+                    break;
+                case 4:
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_RAR);
+                    break;
+                case 5:
+                    intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_APK);
                     break;
             }
+            ((Activity) context).startActivity(intent);
+
         }
 
 
