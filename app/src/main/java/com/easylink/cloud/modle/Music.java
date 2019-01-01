@@ -1,9 +1,5 @@
 package com.easylink.cloud.modle;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-
 public class Music extends LocalFile {
     protected String name;
     protected String album;
@@ -55,17 +51,6 @@ public class Music extends LocalFile {
         this.artist = artist;
     }
 
-    public float getSize() {
-        return size;
-    }
-
-    public void setSize(float size) {
-        this.size = size;
-    }
-
-    public float getSizeFormat() {
-        return size / (1024 * 1024.0f);
-    }
 
     public String getDuration() {
         return duration;

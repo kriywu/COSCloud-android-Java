@@ -26,7 +26,7 @@
             android:layout_marginLeft="8dp"
             android:layout_weight="1"
             android:enabled="false"
-            android:text="根目录" />
+            android:hint="根目录" />
 
         <Button
             android:id="@+id/btn_ack"

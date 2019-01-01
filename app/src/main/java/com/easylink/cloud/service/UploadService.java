@@ -3,15 +3,20 @@ package com.easylink.cloud.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
+import com.easylink.cloud.modle.FetchTask;
+import com.easylink.cloud.util.StaticHelper;
 import com.easylink.cloud.web.Client;
 import com.easylink.cloud.modle.Constant;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class UploadService extends Service {
     private int sumSize = 0;
@@ -19,16 +24,24 @@ public class UploadService extends Service {
     private String prefix;
     private UploadBinder binder = new UploadBinder();
     private Context context;
+    private LocalBroadcastManager broadcastManager;
 
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(getApplicationContext(), "start service", Toast.LENGTH_LONG).show();
+
+        // 上传的位置
         paths = intent.getStringArrayListExtra(Constant.EXTRA_PATHS);
+
+        // 上传的路径
         prefix = intent.getStringExtra(Constant.EXTRA_PREFIX);
+        broadcastManager = LocalBroadcastManager.getInstance(this);
 
         for (String p : paths) {
-            Client.getClient(this).upload(Constant.bucket, prefix + new File(p).getName(), p); // bucket key path
+            FetchTask task = new FetchTask(StaticHelper.geneTaskID(Constant.bucket, prefix, p, new Date()));
+
+            Client.getClient(this).upload(broadcastManager,task); // bucket prefix path
         }
 
 

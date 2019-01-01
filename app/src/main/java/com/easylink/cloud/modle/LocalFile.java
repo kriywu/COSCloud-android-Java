@@ -29,7 +29,8 @@ public class LocalFile implements Comparable {
     }
 
     public float getSizeFormat() {
-        return size / (1024 * 1024.0f);
+        int mb = (int) (1000 * size / (1024 * 1024.0f));
+        return mb / 1000f;
     }
 
     @Override

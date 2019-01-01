@@ -33,5 +33,6 @@ public class Constant {
     final public static String EXTRA_RAR = "rar";
     final public static String EXTRA_APK = "apk";
 
-
+    final public static String BROADCAST_UPLOAD_PROGRESS = "com.easylink.cloud.upload_progress";
+    final public static String EXTRA_FETCH_TASK = "extra_task";
 }

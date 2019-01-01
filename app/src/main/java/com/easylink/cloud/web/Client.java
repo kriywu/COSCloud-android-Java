@@ -1,12 +1,14 @@
 package com.easylink.cloud.web;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
-import android.widget.Toast;
 
 
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
+import com.easylink.cloud.modle.FetchTask;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -19,7 +21,6 @@ import com.tencent.cos.xml.model.bucket.GetBucketRequest;
 import com.tencent.cos.xml.model.bucket.GetBucketResult;
 import com.tencent.cos.xml.model.object.DeleteMultiObjectRequest;
 import com.tencent.cos.xml.model.object.DeleteObjectRequest;
-import com.tencent.cos.xml.model.object.PutObjectACLResult;
 import com.tencent.cos.xml.model.tag.ListBucket;
 import com.tencent.cos.xml.transfer.COSXMLUploadTask;
 import com.tencent.cos.xml.transfer.TransferConfig;
@@ -130,24 +131,28 @@ public class Client {
 
     /**
      * 异步
-     *
-     * @param bucket
-     * @param key
-     * @param path
      */
-    public void upload(String bucket, String key, String path) {
+    public void upload(final LocalBroadcastManager broadcastManager, final FetchTask task) {
         TransferConfig transferConfig = new TransferConfig.Builder().build();// 设置是否分片，分片的大小等
         //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService, transferConfig);
-        String uploadId = null;//key + System.currentTimeMillis();//用于续传,若无,则为null
+        String uploadId = null;//prefix + System.currentTimeMillis();//用于续传,若无,则为null
 
-        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(bucket, key, path, uploadId); //上传文件
+        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(task.bucket, task.prefix + task.name, task.path, uploadId); //上传文件
         //设置上传进度回调
+
+        // 完成的任务写入文件
+        // 没有完成的文件广播
+        // 任务ID，任务进度
         cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
             @Override
             public void onProgress(long complete, long target) {
                 float progress = 1.0f * complete / target * 100;
-                Log.d("TEST", String.format("progress = %d%%", (int) progress));
+                Log.d("CLIENT", progress + "");
+                Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
+                task.progress = progress;
+                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
+                broadcastManager.sendBroadcast(intent);
             }
         });
 
@@ -155,14 +160,27 @@ public class Client {
         cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
-                Log.d("TEST", "Success: " + result.printResult());
+                Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
+                task.isSuccess = true;
+                task.progress = 100f;
+                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
+                broadcastManager.sendBroadcast(intent);
+                Log.d("CLIENT", "Success");
+                // 写入文件
             }
 
             @Override
             public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
-                Log.d("TEST", "Failed: " + (exception == null ? serviceException.getMessage() : exception.toString()));
+                Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
+                task.isSuccess = false;
+                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
+                broadcastManager.sendBroadcast(intent);
+                Log.d("CLIENT", "Failed");
+                exception.printStackTrace();
+                //serviceException.printStackTrace();
             }
         });
+
         //设置任务状态回调, 可以查看任务过程
         cosxmlUploadTask.setTransferStateListener(new TransferStateListener() {
             @Override
@@ -185,6 +203,7 @@ public class Client {
         cosXmlService.deleteObjectAsync(request, new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
+
             }
 
             @Override

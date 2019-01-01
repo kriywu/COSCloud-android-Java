@@ -7,11 +7,10 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_upload_option"
         android:layout_width="match_parent"
-        android:layout_margin="8dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp">
 
     </android.support.v7.widget.RecyclerView>
-
 
     <TextView
         android:layout_width="match_parent"
@@ -27,12 +26,37 @@
         android:layout_margin="8dp"
         android:background="@color/colorPrimary" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_upload_history"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.design.widget.TabItem
+            android:id="@+id/ti_unfinished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="正在进行" />
+
+        <android.support.design.widget.TabItem
+            android:id="@+id/ti_finished"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="历史记录" />
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_task"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/rv_upload_history"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+        <!--</android.support.v7.widget.RecyclerView>-->
+
+    </android.support.v4.view.ViewPager>
+
 
 </LinearLayout>
