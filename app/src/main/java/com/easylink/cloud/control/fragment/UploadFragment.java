@@ -10,10 +10,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,9 +21,10 @@ import android.view.ViewGroup;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.control.adapter.MultiViewAdapter;
-import com.easylink.cloud.control.adapter.ProgressAdapter;
 import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.modle.FetchTask;
+import com.easylink.cloud.broadcast.UploadProgressReceiver;
+
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,19 +33,20 @@ import java.util.List;
 public class UploadFragment extends Fragment {
     private Context context;
     private RecyclerView rvUploadType;
-    //private RecyclerView rvHistory;
     private ViewPager viewPager;
     private TabLayout tabLayout;
 
-    private UploadProgressReceiver receiver;
-    private LocalBroadcastManager broadcastManager;
-    private List<FetchTask> unFiniTask = new LinkedList<>();
-    private List<FetchTask> finiTask = new LinkedList<>();
+
+    private DownloadFragment fragment1;
+    private DownloadFragment fragment2;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = getActivity();
+
+        fragment1 = DownloadFragment.newInstance("0");
+        fragment2 = DownloadFragment.newInstance("1");
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -59,42 +60,24 @@ public class UploadFragment extends Fragment {
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvUploadType.setLayoutManager(manager);
 
-//        rvHistory = view.findViewById(R.id.rv_upload_history);
-//        rvHistory.setAdapter(new ProgressAdapter(context, unFiniTask));
-//
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(context);
-//        rvHistory.setLayoutManager(layoutManager);
-//        rvHistory.addItemDecoration(new DividerItemDecoration(context, LinearLayoutManager.VERTICAL));
 
-        broadcastManager = LocalBroadcastManager.getInstance(context);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Constant.BROADCAST_UPLOAD_PROGRESS);
-        receiver = new UploadProgressReceiver();
-        broadcastManager.registerReceiver(receiver, intentFilter);
+        viewPager.setAdapter(new FragmentPagerAdapter(getChildFragmentManager()) {
+            @Override
+            public Fragment getItem(int i) {
+                return (i == 0 ? fragment1 : fragment2);
+            }
 
-        RecyclerView recyclerView = new RecyclerView(context);
-        recyclerView.setAdapter(new ProgressAdapter(context, unFiniTask));
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.addView(recyclerView);
-
-        RecyclerView recyclerView2 = new RecyclerView(context);
-        recyclerView.setAdapter(new ProgressAdapter(context, unFiniTask));
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        recyclerView.addView(recyclerView);
-
-        viewPager.addView(recyclerView);
-        viewPager.addView(recyclerView2);
-        viewPager.setAdapter(new PagerAdapter() {
             @Override
             public int getCount() {
                 return 2;
             }
 
             @Override
-            public boolean isViewFromObject(@NonNull View view, @NonNull Object o) {
-                return false;
+            public CharSequence getPageTitle(int position) {
+                return (position == 0 ? "正在进行" : "历史记录");
             }
         });
+        tabLayout.setupWithViewPager(viewPager, false);
 
         return view;
     }
@@ -112,22 +95,4 @@ public class UploadFragment extends Fragment {
         this.context = context;
     }
 
-
-    class UploadProgressReceiver extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            FetchTask task = intent.getParcelableExtra(Constant.EXTRA_FETCH_TASK);
-
-            // 如果列表中存在，更新
-            // 如果列表中不存在，添加
-            if (unFiniTask.contains(task)) {
-                unFiniTask.get(unFiniTask.indexOf(task)).updata(task); // 更新进度和状态
-            } else {
-                unFiniTask.add(0, task);
-            }
-
-            //rvHistory.getAdapter().notifyDataSetChanged();
-        }
-    }
 }
