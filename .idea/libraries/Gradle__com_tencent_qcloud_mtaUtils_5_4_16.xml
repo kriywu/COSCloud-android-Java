@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.tencent.qcloud:mtaUtils-5.4.16">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/4637ee5c53b805af99534ff555f30245/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/4637ee5c53b805af99534ff555f30245/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.tencent.qcloud/mtaUtils/5.4.16/6e75f14a0811f24e95d6695947814f0590a9b2da/mtaUtils-5.4.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -36,9 +36,10 @@ dependencies {
     // range seek bar
     implementation 'com.github.Jay-Goo:RangeSeekBar:v2.0.4'
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-
-
     implementation 'org.litepal.android:java:3.0.0'
+
+    implementation 'com.google.zxing:core:3.3.3'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
 
 }

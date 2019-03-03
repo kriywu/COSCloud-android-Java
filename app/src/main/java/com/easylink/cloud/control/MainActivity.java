@@ -31,7 +31,11 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         frameLayout = findViewById(R.id.content);
         navigationView.setOnNavigationItemSelectedListener(this);
         setCurrentFragment(0);
+
+
     }
+
+
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {

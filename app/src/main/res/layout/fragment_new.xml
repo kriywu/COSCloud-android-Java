@@ -4,9 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.jaygoo.widget.RangeSeekBar
-        android:id="@+id/rsb_range"
+    <Button
+        android:id="@+id/btn_jump"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="测试"/>
+
 
 </LinearLayout>

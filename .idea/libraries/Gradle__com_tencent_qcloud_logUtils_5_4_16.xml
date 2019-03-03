@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.tencent.qcloud:logUtils-5.4.16">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/logUtils-5.4.16.aar/dceaa0596c0b4b0940a56ac9d89167fc/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/logUtils-5.4.16.aar/dceaa0596c0b4b0940a56ac9d89167fc/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.tencent.qcloud/logUtils/5.4.16/66918c25a46e4e2fe7d0a645494f51bce2c228b5/logUtils-5.4.16-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

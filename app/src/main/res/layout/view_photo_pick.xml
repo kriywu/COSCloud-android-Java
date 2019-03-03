@@ -7,8 +7,12 @@
         android:id="@+id/iv_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/avatar" />
+        android:scaleType="centerCrop"/>
+    <TextView
+        android:id="@+id/tv_photo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left|top"/>
 
     <CheckBox
         android:id="@+id/cb_photo"
