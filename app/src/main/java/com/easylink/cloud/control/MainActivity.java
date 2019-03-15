@@ -10,31 +10,34 @@ import android.widget.FrameLayout;
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseActivity;
 import com.easylink.cloud.control.fragment.EnjoyFragment;
-import com.easylink.cloud.control.fragment.UploadFragment;
 import com.easylink.cloud.control.fragment.FileFragment;
 import com.easylink.cloud.control.fragment.MeFragment;
 import com.easylink.cloud.control.fragment.NewFragment;
+import com.easylink.cloud.control.fragment.UploadFragment;
 
 
 public class MainActivity extends BaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private static final String TAG = "MainActivity";
 
     private Fragment[] fragments = new Fragment[5];
     private FrameLayout frameLayout;
     private Fragment currentFragment;
     private BottomNavigationView navigationView;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         navigationView = findViewById(R.id.navigation);
         frameLayout = findViewById(R.id.content);
         navigationView.setOnNavigationItemSelectedListener(this);
         setCurrentFragment(0);
 
-
     }
-
 
 
     @Override
@@ -79,16 +82,18 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     fragments[index] = MeFragment.newInstance(this);
                     break;
             }
-            if(currentFragment == null) {
+            if (currentFragment == null) {
                 currentFragment = fragments[0];
-                getSupportFragmentManager().beginTransaction().add(R.id.content,fragments[0]).commit();
-            }else{
+                getSupportFragmentManager().beginTransaction().add(R.id.content, fragments[0]).commit();
+            } else {
                 getSupportFragmentManager().beginTransaction().hide(currentFragment).add(R.id.content, fragments[index]).commit();
 
             }
-        }else{
+        } else {
             getSupportFragmentManager().beginTransaction().hide(currentFragment).show(fragments[index]).commit();
         }
         currentFragment = fragments[index];
     }
+
+
 }

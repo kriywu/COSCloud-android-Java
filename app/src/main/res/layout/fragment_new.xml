@@ -8,7 +8,24 @@
         android:id="@+id/btn_jump"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="测试"/>
+        android:text="测试MyGlide"/>
 
+    <Button
+        android:id="@+id/btn_test_permission"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="测试动画"/>
+
+    <Button
+        android:id="@+id/bt_bind"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="测试服务"/>
+
+    <!--<com.easylink.cloud.control.test.MyView-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@color/colorAccent"-->
+         <!--/>-->
 
 </LinearLayout>

@@ -1,13 +1,11 @@
-package com.easylink.cloud.control;
+package com.easylink.cloud.control.test;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -30,21 +28,20 @@ import com.easylink.cloud.util.BitmapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class TestActivity extends AppCompatActivity {
+public class TestGlideActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager = null;
     private List<String> list = new ArrayList<>(1000);
-    private Context context;
     private Executor executor = Executors.newFixedThreadPool(5);
     private int cacheSize = (int) (Runtime.getRuntime().maxMemory() / 1024);
-    private Handler handler;
+    private int width = 0;
     private int minSlop;
     private int state;
-
     private LruCache<String, Bitmap> lruCache = new LruCache<String, Bitmap>(cacheSize) {
         @Override
         protected int sizeOf(String key, Bitmap value) {
@@ -57,24 +54,23 @@ public class TestActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         recyclerView = findViewById(R.id.rv_test);
-        minSlop = 8*ViewConfiguration.get(this).getScaledTouchSlop();
+        minSlop = 8 * ViewConfiguration.get(this).getScaledTouchSlop();
 
-        context = this;
-        handler = new Handler();
+        //handler = new Handler();
         recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 // 0 没有滚动  1用户正在使用 2自然滑动
-                if(newState == 0) {
-                    recyclerView.getAdapter().notifyDataSetChanged();
+                if (newState == 0) {
+                    Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
                 }
             }
 
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(dy > minSlop) state = 1; // 慢速滑动
+                if (dy > minSlop) state = 1; // 慢速滑动
                 else state = 0; // 快速滑动
             }
         });
@@ -83,33 +79,22 @@ public class TestActivity extends AppCompatActivity {
             @NonNull
             @Override
             public IvHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-                View view = LayoutInflater.from(TestActivity.this).inflate(R.layout.view_photo_pick, viewGroup, false);
+                View view = LayoutInflater.from(TestGlideActivity.this).inflate(R.layout.view_photo_pick, viewGroup, false);
                 return new IvHolder(view);
             }
 
             @Override
-            public void onBindViewHolder(@NonNull IvHolder ivHolder, int i) {
+            public void onBindViewHolder(final IvHolder ivHolder, int i) {
                 final String path = list.get(i);
-                final int index = i;
-                Bitmap bitmap = lruCache.get(path);
+                final ImageView imageView = ivHolder.imageView;
+                imageView.setTag(path);
 
-                if (bitmap != null) {
-                    ivHolder.imageView.setImageBitmap(bitmap);
+                if (width == 0) {
+                    measureSize(imageView);
                 } else {
-                    if (state == 0)
-                        executor.execute(new Runnable() {
-                            @Override
-                            public void run() {
-                                lruCache.put(path, BitmapUtil.decodeBitmapFromFile(path, 100, 100));
-                                handler.post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        recyclerView.getAdapter().notifyItemChanged(index);
-                                    }
-                                });
-
-                            }
-                        });
+                    Bitmap bitmap = lruCache.get(path);
+                    if (bitmap != null) imageView.setImageBitmap(bitmap);
+                    else if (state == 0) cacheBitmap(imageView, path, width);
                 }
             }
 
@@ -118,6 +103,7 @@ public class TestActivity extends AppCompatActivity {
             public void onViewRecycled(@NonNull IvHolder holder) {
                 super.onViewRecycled(holder);
                 holder.imageView.setImageDrawable(getDrawable(R.drawable.blank));
+                holder.imageView.postInvalidate();
             }
 
             @Override
@@ -129,6 +115,20 @@ public class TestActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         checkPermissionForReadStorage();
+    }
+
+    public void measureSize(final ImageView imageView) {
+        imageView.post(() -> {
+                width = imageView.getWidth();
+                Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged(); });
+    }
+
+    public void cacheBitmap(final ImageView imageView, final String path, final int size) {
+        executor.execute(() -> {
+            lruCache.put(path, BitmapUtil.decodeBitmapFromFile(path, size, size));
+            if (imageView.getTag() == path)
+                imageView.post(() -> imageView.setImageBitmap(lruCache.get(path)));
+        });
     }
 
     public void checkPermissionForReadStorage() {
@@ -155,7 +155,7 @@ public class TestActivity extends AppCompatActivity {
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                     new QueryDBTask().execute();
                 } else {
-                    Toast.makeText(TestActivity.this, "你没有授权", Toast.LENGTH_LONG).show();
+                    Toast.makeText(TestGlideActivity.this, "你没有授权", Toast.LENGTH_LONG).show();
                 }
         }
     }
@@ -176,10 +176,10 @@ public class TestActivity extends AppCompatActivity {
         }
     }
 
-    class QueryDBTask extends AsyncTask<Void, Void, List<String>> {
+    class QueryDBTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected List<String> doInBackground(Void... voids) {
+        protected Void doInBackground(Void... voids) {
             Cursor cursor = getContentResolver().query(
                     MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                     null,
@@ -189,11 +189,7 @@ public class TestActivity extends AppCompatActivity {
             );
 
             int index = cursor.getColumnIndex(MediaStore.Files.FileColumns.DATA);
-
-            for (int i = 0; cursor.moveToNext(); i++) {
-                final String path = cursor.getString(index);
-                list.add(path);
-            }
+            while (cursor.moveToNext()) list.add(cursor.getString(index));
             return null;
         }
     }

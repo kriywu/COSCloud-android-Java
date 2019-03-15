@@ -39,7 +39,11 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".control.TestActivity"></activity>
+        <activity android:name=".control.test.TestGlideActivity"></activity>
+        <activity android:name=".control.ContentProTestActivity"></activity>
+        <activity android:name=".control.test.AActivity"/>
+        <service android:name=".control.test.TestBindService"/>
+        <service android:name=".control.test.TestService"/>
 
 
     </application>
