@@ -3,10 +3,9 @@ package com.easylink.cloud.service;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
 import android.os.IBinder;
-import android.support.v4.content.LocalBroadcastManager;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 import com.easylink.cloud.modle.FetchTask;
@@ -14,7 +13,6 @@ import com.easylink.cloud.util.StaticHelper;
 import com.easylink.cloud.web.Client;
 import com.easylink.cloud.modle.Constant;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 

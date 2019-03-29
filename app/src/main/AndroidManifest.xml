@@ -28,7 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".control.FilePickActivity"
             android:theme="@style/AppTheme" />
@@ -39,13 +38,22 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".control.test.TestGlideActivity"></activity>
-        <activity android:name=".control.ContentProTestActivity"></activity>
-        <activity android:name=".control.test.AActivity"/>
-        <service android:name=".control.test.TestBindService"/>
-        <service android:name=".control.test.TestService"/>
+        <activity android:name=".control.test.TestGlideActivity" />
+        <activity android:name=".control.ContentProTestActivity" />
+        <activity android:name=".control.test.AActivity" />
 
+        <service android:name=".control.test.TestBindService" />
+        <service android:name=".control.test.TestService" />
 
+        <activity android:name=".control.test.DownloadActivity" />
+
+        <service
+            android:name=".control.test.DownloadService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".control.test.ViewActivity" />
+        <activity android:name=".demos.RemoteViewsActivity"></activity>
     </application>
 
 </manifest>

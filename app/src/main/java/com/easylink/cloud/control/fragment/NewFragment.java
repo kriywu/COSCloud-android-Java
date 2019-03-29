@@ -10,9 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +19,15 @@ import android.widget.Button;
 import com.easylink.cloud.R;
 import com.easylink.cloud.control.ContentProTestActivity;
 import com.easylink.cloud.control.test.AActivity;
+import com.easylink.cloud.control.test.DownloadActivity;
 import com.easylink.cloud.control.test.TestBindService;
 import com.easylink.cloud.control.test.TestGlideActivity;
+import com.easylink.cloud.control.test.ViewActivity;
+import com.easylink.cloud.demos.RemoteViewsActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 @SuppressLint("ValidFragment")
 public class NewFragment extends Fragment implements View.OnClickListener {
@@ -33,12 +37,15 @@ public class NewFragment extends Fragment implements View.OnClickListener {
     private Button button;
     private Button button2;
     private Button button3;
+    private Button button4;
+    private Button btnRemoteViews;
 
     static int process = 0;
     static TestBindService.MyBinder binder;
 
     static Handler handler = new MyHandler();
-    static class MyHandler extends Handler{
+
+    static class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -71,10 +78,12 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         button.setOnClickListener(this);
         button2 = view.findViewById(R.id.btn_test_permission);
         button2.setOnClickListener(this);
-        button3 = view.findViewById(R.id.bt_bind);
+        button3 = view.findViewById(R.id.btn_download);
         button3.setOnClickListener(this);
-
-
+        button4 = view.findViewById(R.id.btn_View);
+        button4.setOnClickListener(this);
+        btnRemoteViews = view.findViewById(R.id.btn_remote_view);
+        btnRemoteViews.setOnClickListener(this);
         return view;
     }
 
@@ -97,10 +106,12 @@ public class NewFragment extends Fragment implements View.OnClickListener {
             context.startActivity(new Intent(context, TestGlideActivity.class));
         } else if (v.getId() == R.id.btn_test_permission) {
             context.startActivity(new Intent(context, AActivity.class));
-        } else if (v.getId() == R.id.bt_bind) {
-            //startActivity(new Intent(context, AActivity.class));
-            context.bindService(new Intent(context, TestBindService.class), connection, Context.BIND_AUTO_CREATE);
-
+        } else if (v.getId() == R.id.btn_download) {
+            startActivity(new Intent(context, DownloadActivity.class));
+        } else if (v.getId() == R.id.btn_View) {
+            startActivity(new Intent(context, ViewActivity.class));
+        } else if (v.getId() == R.id.btn_remote_view) {
+            startActivity(new Intent(context, RemoteViewsActivity.class));
         }
     }
 

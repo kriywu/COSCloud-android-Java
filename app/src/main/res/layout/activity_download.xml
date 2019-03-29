@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".control.test.DownloadActivity">
+
+    <Button
+        android:id="@+id/btn_begin_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开始下载" />
+
+    <Button
+        android:id="@+id/btn_pause_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="暂停下载" />
+
+    <Button
+        android:id="@+id/btn_cancel_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="取消下载" />
+
+    <ProgressBar
+        android:id="@+id/pb_progress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal" />
+
+
+    <TextView
+        android:id="@+id/tv_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:background="@color/white"
+        android:text="下载:"
+        android:textStyle="bold" />
+
+
+</LinearLayout>

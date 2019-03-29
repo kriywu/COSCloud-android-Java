@@ -1,22 +1,18 @@
 package com.easylink.cloud.control.holder;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BindHolder;
 import com.easylink.cloud.absolute.iQueryList;
-import com.easylink.cloud.modle.Bucket;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.web.Client;
 import com.easylink.cloud.web.QueryList;

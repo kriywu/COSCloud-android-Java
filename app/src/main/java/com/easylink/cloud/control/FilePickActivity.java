@@ -3,19 +3,18 @@ package com.easylink.cloud.control;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,18 +28,14 @@ import com.easylink.cloud.absolute.iPickPhoto;
 import com.easylink.cloud.absolute.iSetUploadPath;
 import com.easylink.cloud.control.adapter.FilePickAdapter;
 import com.easylink.cloud.modle.LocalFile;
-import com.easylink.cloud.modle.Music;
 import com.easylink.cloud.service.UploadService;
 import com.easylink.cloud.modle.Constant;
-import com.easylink.cloud.util.FileUtils;
 import com.easylink.cloud.util.MediaFileClient;
 import com.easylink.cloud.view.PathPopWindow;
-import com.easylink.cloud.web.QueryList;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class FilePickActivity extends BaseActivity implements View.OnClickListener, iPickPhoto, iSetUploadPath {

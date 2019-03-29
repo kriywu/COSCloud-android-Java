@@ -1,12 +1,11 @@
 package com.easylink.cloud.control;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseActivity;

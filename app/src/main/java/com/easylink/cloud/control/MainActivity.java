@@ -1,9 +1,13 @@
 package com.easylink.cloud.control;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.fragment.app.Fragment;
+
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
@@ -37,8 +41,23 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
         navigationView.setOnNavigationItemSelectedListener(this);
         setCurrentFragment(0);
 
+        Log.d(TAG, "onCreate: A");
+        new Handler().post(()-> Log.d(TAG, "onCreate: B"));
+        Log.d(TAG, "onCreate: C");
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "onStart: D");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: E");
+    }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
