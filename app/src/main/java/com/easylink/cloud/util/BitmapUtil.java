@@ -14,7 +14,7 @@ public class BitmapUtil {
         return BitmapFactory.decodeFile(file, options);
     }
 
-    public static int calculateInSampleSize(BitmapFactory.Options options, int width, int height) {
+    private static int calculateInSampleSize(BitmapFactory.Options options, int width, int height) {
         final int outHeight = options.outHeight;
         final int outWidth = options.outWidth;
 

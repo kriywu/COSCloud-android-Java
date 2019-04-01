@@ -54,8 +54,7 @@ dependencies {
 
     // qr
     implementation 'com.google.zxing:core:3.3.3'
-    //implementation 'org.jetbrains:annotations-java5:15.0'
-    //implementation 'com.jakewharton:butterknife-parent:7.0.1'
+
 
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'

@@ -1,5 +1,9 @@
 package com.easylink.cloud.modle;
 
+import android.view.ViewConfiguration;
+
+import com.easylink.cloud.MyApplication;
+
 public class Constant {
     /**
      * 下面5个是我COS相关的参数
@@ -11,6 +15,10 @@ public class Constant {
     public static String region = "ap-beijing";
     public static String bucket = "cos-1253943763";
 
+    /**
+     * configure
+     */
+    public static final int TOUCH_SLOP = ViewConfiguration.get(MyApplication.getContext()).getScaledTouchSlop();
 
     /**
      * 文件类型，目前还只是区分文件夹和非文件夹
