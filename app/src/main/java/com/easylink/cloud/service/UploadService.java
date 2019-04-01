@@ -39,7 +39,7 @@ public class UploadService extends Service {
         for (String p : paths) {
             FetchTask task = new FetchTask(StaticHelper.geneTaskID(Constant.bucket, prefix, p, new Date()));
 
-            Client.getClient(this).upload(broadcastManager,task); // bucket prefix path
+            Client.getClient().upload(broadcastManager,task); // bucket prefix path
         }
 
 

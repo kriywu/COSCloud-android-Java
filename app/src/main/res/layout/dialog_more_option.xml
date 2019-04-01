@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="16dp">
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -11,88 +12,51 @@
 
     </View>
 
-    <LinearLayout
-        android:id="@+id/op_share"
+    <ImageView
+        android:id="@+id/iv_qr"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="200dp"
+        android:visibility="gone"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/op_share" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="发送给朋友" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/op_move"
+    <TextView
+        android:id="@+id/tv_op_qr"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:drawableLeft="@drawable/op_qr"
+        android:layout_margin="8dp"
+        android:text="  生成二维码"/>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/op_move" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="移动到" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/op_url"
+    <TextView
+        android:id="@+id/tv_op_share"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/op_share"
+        android:text="  发送给朋友" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/op_url" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:gravity="center|start"
-            android:text="复制url" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/op_remove"
+    <TextView
+        android:id="@+id/tv_op_move"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/op_move"
+        android:text="  移动到" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/op_remove" />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:gravity="center|left"
-            android:text="删除" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_op_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/op_url"
+        android:text="  复制url" />
+
+    <TextView
+        android:id="@+id/tv_op_remove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/op_remove"
+        android:text="  删除" />
 
 </LinearLayout>

@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class QR {
-    public Bitmap createBitmap(String url, int width, int height) {
+    public static Bitmap createBitmap(String url, int width, int height) {
         // 检查是否为null
         if (url == null || url.equals("") || url.length() == 1) return null;
 

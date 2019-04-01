@@ -43,7 +43,7 @@ public class PathHolder extends BindHolder {
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new QueryList.Builder(context, callBack).setBucket(Constant.bucket).setPrefix(file.getName()).setDelimiter('/').setFlag(1).build().execute();
+                new QueryList.Builder(callBack).setBucket(Constant.bucket).setPrefix(file.getName()).setDelimiter('/').setFlag(1).build().execute();
                 callBack.updatePath(file.getName());
             }
         });

@@ -28,10 +28,10 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
     private List<LocalFile> localFIle;
     private String flag;   //
 
-    public FilePickAdapter(Context context, iPickPhoto callback, List localFIle, String flag) {
+    public FilePickAdapter(Context context, iPickPhoto callback, List localFile, String flag) {
         this.context = context;
         this.callback = callback;
-        this.localFIle = localFIle;
+        this.localFIle = localFile;
         this.flag = flag;
     }
 
@@ -81,12 +81,9 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
             final LocalFile file = (LocalFile) index;
             Glide.with(context).load(file.getPath()).into(imageView);
 
-            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) callback.pick(file);
-                    else callback.unPick(file);
-                }
+            checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) callback.pick(file);
+                else callback.unPick(file);
             });
             // 一定需要放在设置监听器后面，不过放在设置监听器前面，会自动回调之前的监听器，而之前的监听器的index是final类型的，所以会出现显示混乱
             checkBox.setChecked(callback.isPick(file));
@@ -111,12 +108,9 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
             tvName.setText(music.getName());
             tvArtist.setText(music.getArtist());
             cbPick.setText(music.getSizeFormat() + " MB");
-            cbPick.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) callback.pick(music);
-                    else callback.unPick(music);
-                }
+            cbPick.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) callback.pick(music);
+                else callback.unPick(music);
             });
             cbPick.setChecked(callback.isPick(music));
         }
@@ -137,15 +131,11 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
             final LocalFile file = (LocalFile) index;
             tvName.setText(new File(file.getPath()).getName());
             cbPick.setText(file.getSizeFormat() + " MB");
-            cbPick.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) callback.pick(file);
-                    else callback.unPick(file);
-                }
+            cbPick.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) callback.pick(file);
+                else callback.unPick(file);
             });
             cbPick.setChecked(callback.isPick(file));
         }
     }
-
 }

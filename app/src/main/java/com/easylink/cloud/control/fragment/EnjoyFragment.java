@@ -20,15 +20,12 @@ public class EnjoyFragment extends Fragment {
 
         return textView;
     }
-    private EnjoyFragment(Context context){
-        this.context = context;
-    }
 
-    public static EnjoyFragment newInstance(Context context) {
+    public static EnjoyFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        EnjoyFragment fragment = new EnjoyFragment(context);
+        EnjoyFragment fragment = new EnjoyFragment();
         fragment.setArguments(args);
         return fragment;
     }

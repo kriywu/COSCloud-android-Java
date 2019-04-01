@@ -18,14 +18,14 @@ import java.util.List;
 public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
     private Context context;
     private iQueryList callBack;
-    private List datas;
+    private List data;
     private int FLAG = 1; // viewHolder的类型 1 ,2,3,4
 
 
     public FileViewAdapter(Context context, iQueryList callBack, List<Object> datas) {
         this.context = context;
         this.callBack = callBack;
-        this.datas = datas;
+        this.data = datas;
     }
 
     public FileViewAdapter(Context context, iQueryList callBack, List<Object> files, int FLAG) {
@@ -43,12 +43,12 @@ public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull BindHolder holder, int i) {
-        holder.bind(datas.get(i));
+        holder.bind(data.get(i));
     }
 
 
     @Override
     public int getItemCount() {
-        return datas == null ? 0 : datas.size();
+        return data == null ? 0 : data.size();
     }
 }

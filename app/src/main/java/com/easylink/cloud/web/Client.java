@@ -1,11 +1,9 @@
 package com.easylink.cloud.web;
 
-import android.content.Context;
 import android.content.Intent;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.util.Log;
 
-
+import com.easylink.cloud.MyApplication;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.modle.FetchTask;
@@ -13,7 +11,6 @@ import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
 import com.tencent.cos.xml.exception.CosXmlServiceException;
-import com.tencent.cos.xml.listener.CosXmlProgressListener;
 import com.tencent.cos.xml.listener.CosXmlResultListener;
 import com.tencent.cos.xml.model.CosXmlRequest;
 import com.tencent.cos.xml.model.CosXmlResult;
@@ -25,42 +22,40 @@ import com.tencent.cos.xml.model.tag.ListBucket;
 import com.tencent.cos.xml.transfer.COSXMLUploadTask;
 import com.tencent.cos.xml.transfer.TransferConfig;
 import com.tencent.cos.xml.transfer.TransferManager;
-import com.tencent.cos.xml.transfer.TransferState;
-import com.tencent.cos.xml.transfer.TransferStateListener;
+import com.tencent.cos.xml.utils.GenerateGetObjectURLUtils;
 import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
 import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import static com.easylink.cloud.modle.Constant.secretKey;
 
 public class Client {
-    private static Client client = null;
     private static CosXmlService cosXmlService = null;
 
-    private Client(Context context) {
+    private Client() {
         CosXmlServiceConfig serviceConfig = new CosXmlServiceConfig.Builder()
                 .setAppidAndRegion(Constant.appId, Constant.region)
                 .setDebuggable(true)
                 .builder();
-        QCloudCredentialProvider credentialProvider = new ShortTimeCredentialProvider(Constant.secretId, secretKey, 3000);
-        cosXmlService = new CosXmlService(context, serviceConfig, credentialProvider);
+        QCloudCredentialProvider credentialProvider = new ShortTimeCredentialProvider(Constant.secretId, secretKey, 300000);
+        cosXmlService = new CosXmlService(MyApplication.getContext(), serviceConfig, credentialProvider);
     }
 
-    public static Client getClient(Context context) {
-        if (client == null) {
-            client = new Client(context);
-        }
-        return client;
+    public static Client getClient() {
+        return SingleInstance.client;
+    }
+
+    public static class SingleInstance {
+        static final Client client = new Client();
     }
 
     /**
      * 同步
-     *
-     * @param bucket
-     * @param prefix    检索内容的而前缀，KEY的前缀
-     * @param delimiter 定界符 如果定界符为null，则查询所有KEY包含prefix的内容
+     * 检索路径和文件
      */
     public List<CloudFile> getContentAndPath(String bucket, String prefix, Character delimiter) {
         List<CloudFile> files = new LinkedList<>();
@@ -91,19 +86,14 @@ public class Client {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return files;
         }
+
+        return files;
 
     }
 
     /**
-     * 同步
-     *
-     * @param bucket
-     * @param prefix
-     * @param delimiter
-     * @return
+     * 检索路径
      */
 
     public List<CloudFile> getPath(String bucket, String prefix, Character delimiter) {
@@ -124,9 +114,8 @@ public class Client {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            return files;
         }
+        return files;
     }
 
     /**
@@ -144,16 +133,13 @@ public class Client {
         // 完成的任务写入文件
         // 没有完成的文件广播
         // 任务ID，任务进度
-        cosxmlUploadTask.setCosXmlProgressListener(new CosXmlProgressListener() {
-            @Override
-            public void onProgress(long complete, long target) {
-                float progress = 1.0f * complete / target * 100;
-                Log.d("CLIENT", progress + "");
-                Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
-                task.progress = progress;
-                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
-                broadcastManager.sendBroadcast(intent);
-            }
+        cosxmlUploadTask.setCosXmlProgressListener((complete, target) -> {
+            float progress = 1.0f * complete / target * 100;
+            Log.d("CLIENT", progress + "");
+            Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
+            task.progress = progress;
+            intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
+            broadcastManager.sendBroadcast(intent);
         });
 
         //设置返回结果回调
@@ -166,7 +152,6 @@ public class Client {
                 intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
                 broadcastManager.sendBroadcast(intent);
                 Log.d("CLIENT", "Success");
-                // 写入文件
             }
 
             @Override
@@ -177,23 +162,15 @@ public class Client {
                 broadcastManager.sendBroadcast(intent);
                 Log.d("CLIENT", "Failed");
                 exception.printStackTrace();
-                //serviceException.printStackTrace();
             }
         });
 
         //设置任务状态回调, 可以查看任务过程
-        cosxmlUploadTask.setTransferStateListener(new TransferStateListener() {
-            @Override
-            public void onStateChanged(TransferState state) {
-                Log.d("TEST", "Task state:" + state.name());
-            }
-        });
-
-
+        cosxmlUploadTask.setTransferStateListener(state -> Log.d("TEST", "Task state:" + state.name()));
     }
 
     /**
-     * 异步
+     * 删除一个对象对象
      *
      * @param bucket
      * @param key
@@ -212,21 +189,9 @@ public class Client {
         });
     }
 
-    /**
-     * 异步
-     * 删除文件夹文件
-     *
-     * @param bucket
-     * @param prefix
-     */
-
-    public void delPrefixObject(String bucket, String prefix) {
-        //QueryList.Builder builder = new QueryList.Builder()
-    }
 
     /**
-     * 异步
-     * 删除多个文件
+     * 删除多个对象
      *
      * @param bucket
      * @param lists
@@ -245,5 +210,20 @@ public class Client {
                 Log.d("Clent", "del multi failed");
             }
         });
+    }
+
+    /**
+     * 生成url
+     */
+    public String generateUrl(String bucket, String key) {
+        try {
+            return GenerateGetObjectURLUtils.getObjectUrl(false,
+                    Constant.appId,
+                    bucket,
+                    Constant.region,
+                    key);
+        } catch (CosXmlClientException e) {
+            return null;
+        }
     }
 }

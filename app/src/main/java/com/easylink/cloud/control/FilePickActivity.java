@@ -5,16 +5,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,19 +17,30 @@ import com.easylink.cloud.absolute.BaseActivity;
 import com.easylink.cloud.absolute.iPickPhoto;
 import com.easylink.cloud.absolute.iSetUploadPath;
 import com.easylink.cloud.control.adapter.FilePickAdapter;
+import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.modle.LocalFile;
 import com.easylink.cloud.service.UploadService;
-import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.util.MediaFileClient;
 import com.easylink.cloud.view.PathPopWindow;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 public class FilePickActivity extends BaseActivity implements View.OnClickListener, iPickPhoto, iSetUploadPath {
-    private ArrayList<LocalFile> files = new ArrayList<>();
+    private static ArrayList<LocalFile> files = new ArrayList<>();
     private Set<LocalFile> pickFile = new HashSet<>();
 
     private RecyclerView recyclerView;
@@ -47,8 +48,8 @@ public class FilePickActivity extends BaseActivity implements View.OnClickListen
     private TextView tvPath;    //上传的位置
     private TextView tvSize;
     private String prefix = "";
-
     private String flag;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,28 +62,22 @@ public class FilePickActivity extends BaseActivity implements View.OnClickListen
         tvSize = findViewById(R.id.tv_size);
 
         swipeRefreshLayout = findViewById(R.id.srl_flash);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                new QueryDatebase().execute();
-            }
-        });
+        swipeRefreshLayout.setOnRefreshListener(() -> new QueryDatabase(this, flag).execute());
 
         recyclerView = findViewById(R.id.rv_pick);
         recyclerView.setAdapter(new FilePickAdapter(this, this, files, flag));
 
-        if (flag.equals(Constant.EXTRA_VIDEO) || flag.equals(Constant.EXTRA_PHOTO)) {
+        if (flag.equals(Constant.EXTRA_VIDEO) || flag.equals(Constant.EXTRA_PHOTO))
             recyclerView.setLayoutManager(new GridLayoutManager(this, 4));
-        } else {
-            recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        }
+        else recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE}, 1);
         } else {
             swipeRefreshLayout.setRefreshing(true); // 进入时候刷新
-            new QueryDatebase().execute();
+            new QueryDatabase(this, flag).execute();
         }
 
     }
@@ -121,13 +116,12 @@ public class FilePickActivity extends BaseActivity implements View.OnClickListen
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-                    new QueryDatebase().execute();
+                    new QueryDatabase(this, flag).execute();
                 } else {
                     Toast.makeText(FilePickActivity.this, "你没有授权", Toast.LENGTH_LONG).show();
                 }
         }
     }
-
 
     // 选择上传路径位置
     @Override
@@ -145,27 +139,41 @@ public class FilePickActivity extends BaseActivity implements View.OnClickListen
         }
     }
 
-    class QueryDatebase extends AsyncTask<Void, Void, Void> {
+    static class QueryDatabase extends AsyncTask<Void, Void, Void> {
+        WeakReference<FilePickActivity> activity;
+
+        String flag = null;
+
+        QueryDatabase(FilePickActivity activity, String flag) {
+            this.activity = new WeakReference<>(activity);
+            this.flag = flag;
+        }
+
 
         @Override
         protected Void doInBackground(Void... voids) {
             if (flag.equals(Constant.EXTRA_PHOTO))
-                files.addAll(MediaFileClient.getInstance(FilePickActivity.this).getPhotos());
+                files.addAll(MediaFileClient.getInstance(activity.get()).getPhotos());
             else if (flag.equals(Constant.EXTRA_VIDEO))
-                files.addAll(MediaFileClient.getInstance(FilePickActivity.this).getVideo());
+                files.addAll(MediaFileClient.getInstance(activity.get()).getVideo());
             else if (flag.equals(Constant.EXTRA_MUSIC))
-                files.addAll(MediaFileClient.getInstance(FilePickActivity.this).getMusics());
+                files.addAll(MediaFileClient.getInstance(activity.get()).getMusics());
             else
-                files.addAll(MediaFileClient.getInstance(FilePickActivity.this).getFilesByType(flag));
+                files.addAll(MediaFileClient.getInstance(activity.get()).getFilesByType(flag));
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            swipeRefreshLayout.setRefreshing(false);
-            recyclerView.getAdapter().notifyDataSetChanged();
+            if (activity.get() != null) activity.get().updateUI();
+
         }
+    }
+
+    private void updateUI() {
+        swipeRefreshLayout.setRefreshing(false);
+        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
     }
 
     public float sumSize() {
@@ -202,5 +210,4 @@ public class FilePickActivity extends BaseActivity implements View.OnClickListen
         if (path.equals("")) tvPath.setText("上传到：根目录");
         else tvPath.setText("上传到：" + prefix);
     }
-
 }

@@ -4,62 +4,74 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.appcompat.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.easylink.cloud.R;
+import com.easylink.cloud.absolute.BaseFragment;
+import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.control.FeedbackActivity;
+import com.easylink.cloud.modle.CloudFile;
+import com.easylink.cloud.web.QueryList;
+
+import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
+import butterknife.BindView;
+import butterknife.OnClick;
 
 @SuppressLint("ValidFragment")
-public class MeFragment extends Fragment implements View.OnClickListener {
+public class MeFragment extends BaseFragment implements iQueryList {
     private Context context;
-    private SwitchCompat scDayNight;
+    @BindView(R.id.sc_dayNight)
+    SwitchCompat scDayNight;
     private TextView tvShare;
-    private TextView tvFeedback;
+    @BindView(R.id.tv_feedback)
+    TextView tvFeedback;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_me, container, false);
-        tvFeedback = view.findViewById(R.id.tv_feedback);
-        tvFeedback.setOnClickListener(this);
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        scDayNight = view.findViewById(R.id.sc_dayNight);
-        scDayNight.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        context = getActivity();
+        scDayNight.setOnCheckedChangeListener((buttonView, isChecked) -> {
 
-            }
         });
 
         return view;
     }
 
-    private MeFragment(Context context) {
-        this.context = context;
+    @Override
+    public int getLayout() {
+        return R.layout.fragment_me;
     }
 
-    public static MeFragment newInstance(Context context) {
+
+    public static MeFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        MeFragment fragment = new MeFragment(context);
+        MeFragment fragment = new MeFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+    @OnClick(R.id.tv_feedback)
+    public void setTvFeedback(){
+        Intent intent = new Intent(context, FeedbackActivity.class);
+        startActivity(intent);
+    }
+
     @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.tv_feedback:
-                Intent intent = new Intent(context,FeedbackActivity.class);
-                startActivity(intent);
-                break;
-        }
+    public void updateList(List<CloudFile> files) {
+
+    }
+
+    @Override
+    public void updatePath(String path) {
+
     }
 }

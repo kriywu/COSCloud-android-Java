@@ -3,14 +3,14 @@ package com.easylink.cloud.control;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
 
 import com.easylink.cloud.R;
+import com.easylink.cloud.absolute.CommonActivity;
 import com.easylink.cloud.absolute.iPickPhoto;
 import com.easylink.cloud.control.adapter.FilePickAdapter;
 import com.easylink.cloud.modle.Constant;
@@ -19,26 +19,29 @@ import com.easylink.cloud.modle.LocalFile;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContentProTestActivity extends AppCompatActivity implements iPickPhoto{
+public class ContentProTestActivity extends CommonActivity implements iPickPhoto{
+
+    @BindView(R.id.rv_pick)
+    RecyclerView recyclerView;
+
     private List<String> list = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pick);
         readPhoto();
-        RecyclerView recyclerView = findViewById(R.id.rv_pick);
         recyclerView.setAdapter(new FilePickAdapter(this,this,list,Constant.EXTRA_PHOTO));
         recyclerView.setLayoutManager(new GridLayoutManager(this,4));
 
-        Handler.Callback callback  = new Handler.Callback() {
-            @Override
-            public boolean handleMessage(Message msg) {
-                return false;
-            }
-        };
+        Handler.Callback callback  = msg -> false;
         new Handler(callback);
 
     }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.activity_pick;
+    }
+
     // 使用ContentValue插入或者删除数据
     // URI是表的全称
     // * 表示任意长度字符

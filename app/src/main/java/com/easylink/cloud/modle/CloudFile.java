@@ -1,9 +1,5 @@
 package com.easylink.cloud.modle;
 
-import android.content.Intent;
-
-import java.util.Date;
-
 public class CloudFile {
     private String state; // 文件类型 TEXT MP3 MP4 ...
     private long size; // 文件大小

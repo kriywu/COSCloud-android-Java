@@ -25,6 +25,8 @@ public class Constant {
     final public static int IMAGE_REQUEST_CODE = 1;
     final public static int VIDEO_REQUEST_CODE = 2;
 
+    final public static String EXTRA_ID = "extra_id";
+
     final public static String UPLOAD_TYPE = "upload_type";
     final public static String EXTRA_VIDEO = "extra_video";
     final public static String EXTRA_MUSIC = "extra_music";

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.easylink.cloud.R;
+import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.control.ContentProTestActivity;
 import com.easylink.cloud.control.test.AActivity;
 import com.easylink.cloud.control.test.DownloadActivity;
@@ -24,10 +25,22 @@ import com.easylink.cloud.control.test.TestBindService;
 import com.easylink.cloud.control.test.TestGlideActivity;
 import com.easylink.cloud.control.test.ViewActivity;
 import com.easylink.cloud.demos.RemoteViewsActivity;
+import com.easylink.cloud.modle.CloudFile;
+import com.easylink.cloud.modle.Constant;
+import com.easylink.cloud.web.Client;
+import com.easylink.cloud.web.QueryList;
+import com.tencent.cos.xml.CosXmlService;
+import com.tencent.cos.xml.CosXmlServiceConfig;
+import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
+import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import static com.easylink.cloud.modle.Constant.secretKey;
 
 @SuppressLint("ValidFragment")
 public class NewFragment extends Fragment implements View.OnClickListener {
@@ -45,6 +58,7 @@ public class NewFragment extends Fragment implements View.OnClickListener {
 
     static Handler handler = new MyHandler();
 
+
     static class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
@@ -60,7 +74,6 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             binder = (TestBindService.MyBinder) service;
-
             handler.sendEmptyMessageDelayed(1, 1000);
         }
 
@@ -74,6 +87,7 @@ public class NewFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new, container, false);
+        context = getActivity();
         button = view.findViewById(R.id.btn_jump);
         button.setOnClickListener(this);
         button2 = view.findViewById(R.id.btn_test_permission);
@@ -84,18 +98,16 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         button4.setOnClickListener(this);
         btnRemoteViews = view.findViewById(R.id.btn_remote_view);
         btnRemoteViews.setOnClickListener(this);
+
+
         return view;
     }
 
-    private NewFragment(Context context) {
-        this.context = context;
-    }
-
-    public static NewFragment newInstance(Context context) {
+    public static NewFragment newInstance() {
 
         Bundle args = new Bundle();
 
-        NewFragment fragment = new NewFragment(context);
+        NewFragment fragment = new NewFragment();
         fragment.setArguments(args);
         return fragment;
     }

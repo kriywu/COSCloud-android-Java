@@ -1,17 +1,16 @@
 package com.easylink.cloud.web;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
 import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
-    private static iQueryList mCallBack;
-    private static Context mContext;
+    private static WeakReference<iQueryList> mCallBack;
     private Builder builder;
 
 
@@ -21,16 +20,17 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
 
     @Override
     protected List<CloudFile> doInBackground(Void... voids) {
-        if (builder.isPath == 1) {
-            return Client.getClient(mContext).getPath(builder.bucket, builder.prefix, builder.delimiter);
+        if (builder.flag == 1) {
+            return Client.getClient().getPath(builder.bucket, builder.prefix, builder.delimiter);
         }
-        return Client.getClient(mContext).getContentAndPath(builder.bucket, builder.prefix, builder.delimiter);
+        return Client.getClient().getContentAndPath(builder.bucket, builder.prefix, builder.delimiter);
     }
 
     @Override
     protected void onPostExecute(List<CloudFile> fs) {
         super.onPostExecute(fs);
-        mCallBack.updateList(fs);
+        if (mCallBack.get() == null) return;
+        mCallBack.get().updateList(fs);
     }
 
 
@@ -38,11 +38,10 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
         private String bucket = Constant.bucket;
         private String prefix = "";
         private char delimiter = '/';
-        private int isPath = 0;
+        private int flag = 0;
 
-        public Builder(Context context, iQueryList callback) {
-            mContext = context;
-            mCallBack = callback;
+        public Builder(iQueryList callback) {
+            mCallBack = new WeakReference<>(callback);
         }
 
         public Builder setBucket(String bucket) {
@@ -60,8 +59,8 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
             return this;
         }
 
-        public Builder setFlag(int isPath) {
-            this.isPath = isPath;
+        public Builder setFlag(int flag) {
+            this.flag = flag;
             return this;
         }
 
