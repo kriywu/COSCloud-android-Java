@@ -14,17 +14,18 @@
 
     <ImageView
         android:id="@+id/iv_qr"
-        android:layout_width="match_parent"
+        android:layout_width="200dp"
         android:layout_height="200dp"
-        android:visibility="gone"/>
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_op_qr"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableLeft="@drawable/op_qr"
         android:layout_margin="8dp"
-        android:text="  生成二维码"/>
+        android:drawableLeft="@drawable/op_qr"
+        android:text="  生成二维码" />
 
     <TextView
         android:id="@+id/tv_op_share"

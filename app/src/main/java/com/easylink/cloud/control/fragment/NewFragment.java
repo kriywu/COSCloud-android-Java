@@ -100,6 +100,7 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         btnRemoteViews.setOnClickListener(this);
 
 
+        Client.getClient();
         return view;
     }
 

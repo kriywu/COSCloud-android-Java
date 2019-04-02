@@ -18,6 +18,7 @@ import com.easylink.cloud.modle.FetchTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -74,6 +75,6 @@ public class DownloadFragment extends BaseFragment implements iFlashData {
 
     @Override
     public void flash() {
-        recyclerView.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
     }
 }

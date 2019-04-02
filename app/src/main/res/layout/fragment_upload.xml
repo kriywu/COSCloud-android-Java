@@ -6,7 +6,7 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -14,38 +14,50 @@
 
             <ImageView
                 android:id="@+id/iv_photo"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_photo" />
 
             <ImageView
                 android:id="@+id/iv_video"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_mv" />
 
             <ImageView
                 android:id="@+id/iv_music"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_music" />
 
             <ImageView
                 android:id="@+id/iv_file"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_file" />
 
             <ImageView
                 android:id="@+id/iv_rar"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_rar" />
 
             <ImageView
                 android:id="@+id/iv_apk"
-                android:layout_width="wrap_content"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
                 android:src="@drawable/icon_apk" />
         </LinearLayout>
 
