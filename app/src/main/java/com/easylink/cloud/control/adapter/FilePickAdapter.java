@@ -1,13 +1,10 @@
 package com.easylink.cloud.control.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,13 +19,16 @@ import com.easylink.cloud.modle.Music;
 import java.io.File;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
     private Context context;
     private iPickPhoto callback;
     private List<LocalFile> localFIle;
     private String flag;   //
 
-    public FilePickAdapter(Context context, iPickPhoto callback, List localFile, String flag) {
+    public FilePickAdapter(Context context, iPickPhoto callback, List<LocalFile> localFile, String flag) {
         this.context = context;
         this.callback = callback;
         this.localFIle = localFile;
@@ -68,9 +68,9 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
 
     public class PhotosHolder extends BindHolder {
         private ImageView imageView;
-        public CheckBox checkBox;
+        CheckBox checkBox;
 
-        public PhotosHolder(@NonNull View itemView) {
+        PhotosHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.iv_photo);
             checkBox = itemView.findViewById(R.id.cb_photo);
@@ -79,7 +79,7 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
         @Override
         public void bind(Object index) {
             final LocalFile file = (LocalFile) index;
-            Glide.with(context).load(file.getPath()).into(imageView);
+            Glide.with(context).load(file.path).into(imageView);
 
             checkBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) callback.pick(file);
@@ -105,8 +105,8 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
         @Override
         public void bind(Object index) {
             final Music music = (Music) index;
-            tvName.setText(music.getName());
-            tvArtist.setText(music.getArtist());
+            tvName.setText(music.name);
+            tvArtist.setText(music.artist);
             cbPick.setText(music.getSizeFormat() + " MB");
             cbPick.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) callback.pick(music);
@@ -129,7 +129,7 @@ public class FilePickAdapter extends RecyclerView.Adapter<BindHolder> {
         @Override
         public void bind(Object index) {
             final LocalFile file = (LocalFile) index;
-            tvName.setText(new File(file.getPath()).getName());
+            tvName.setText(new File(file.path).getName());
             cbPick.setText(file.getSizeFormat() + " MB");
             cbPick.setOnCheckedChangeListener((buttonView, isChecked) -> {
                 if (isChecked) callback.pick(file);

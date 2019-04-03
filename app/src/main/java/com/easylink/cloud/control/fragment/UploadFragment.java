@@ -22,13 +22,14 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class UploadFragment extends BaseFragment {
-    private DownloadFragment fragment1;
-    private DownloadFragment fragment2;
+    private BaseFragment fragment1;
+    private BaseFragment fragment2;
 
     @BindView(R.id.vp_task)
     ViewPager viewPager;
     @BindView(R.id.tl_task)
     TabLayout tabLayout;
+
     @BindView(R.id.iv_photo)
     ImageView iv_photo;
     @BindView(R.id.iv_video)
@@ -54,8 +55,8 @@ public class UploadFragment extends BaseFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        fragment1 = DownloadFragment.newInstance("0");
-        fragment2 = DownloadFragment.newInstance("1");
+        fragment1 = OnGoingFragment.newInstance();
+        fragment2 = HistoryFragment.newInstance();
     }
 
 
@@ -112,7 +113,6 @@ public class UploadFragment extends BaseFragment {
                 intent.putExtra(Constant.UPLOAD_TYPE, Constant.EXTRA_APK);
                 break;
         }
-        if(getActivity() != null) startActivity(intent);
+        if (getActivity() != null) startActivity(intent);
     }
-
 }

@@ -1,8 +1,7 @@
 package com.easylink.cloud.control.adapter;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,24 +11,45 @@ import android.widget.TextView;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BindHolder;
-import com.easylink.cloud.modle.FetchTask;
+import com.easylink.cloud.absolute.iUploadBinderController;
+import com.easylink.cloud.modle.UploadTask;
+import com.easylink.cloud.util.TableUploadTaskCRUD;
 
-import java.util.List;
+import java.util.Deque;
+import java.util.LinkedList;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static com.easylink.cloud.R.drawable.ic_resume;
 
 public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
-    private Context context;
-    private List<FetchTask> list;
+    private static final String TAG = "ProgressAdapter";
+    private Context context ;
+    private iUploadBinderController binderController = null;
+    private LinkedList<UploadTask> list;
 
-    public ProgressAdapter(Context context, List<FetchTask> list) {
-        this.list = list;
+    public ProgressAdapter(Context context, iUploadBinderController callback, Deque<UploadTask> list) {
         this.context = context;
+        binderController = callback;
+        this.list = (LinkedList<UploadTask>) list;
+    }
+
+    public void setData(LinkedList<UploadTask> tasks) {
+        this.list = tasks;
     }
 
     @NonNull
     @Override
     public BindHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(context).inflate(R.layout.view_progress_item, viewGroup, false);
-        return new ProgressHolder(view);
+        View view;
+        if (binderController != null) {
+            view = LayoutInflater.from(context).inflate(R.layout.view_progress_item, viewGroup, false);
+            return new ProgressHolder(view);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.view_history_item, viewGroup, false);
+            return new HistoryHolder(view);
+        }
     }
 
     @Override
@@ -39,15 +59,41 @@ public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
 
     @Override
     public int getItemCount() {
-        return list.size();
+        Log.d(TAG, "getItemCount: " + (list == null ? 0 : list.size()));
+        return list == null ? 0 : list.size();
+    }
+
+    private class HistoryHolder extends BindHolder {
+        ImageView ivIcon;
+        TextView tvName;
+        ImageView ivCanceled;
+
+        public HistoryHolder(@NonNull View itemView) {
+            super(itemView);
+            ivIcon = itemView.findViewById(R.id.iv_icon);
+            tvName = itemView.findViewById(R.id.tv_name);
+            ivCanceled = itemView.findViewById(R.id.iv_cancelled);
+        }
+
+        @Override
+        public void bind(Object index) {
+            UploadTask task = (UploadTask) index;
+            tvName.setText(task.name);
+            ivCanceled.setOnClickListener(v -> {
+                list.remove(getAdapterPosition());
+                TableUploadTaskCRUD.getInstant().removeUploadTask(task);
+                notifyItemRemoved(getAdapterPosition());
+            });
+        }
     }
 
     private class ProgressHolder extends BindHolder {
-        private ImageView ivIcon;
-        private TextView tvName;
-        private ProgressBar pbProgress;
-        private TextView tvProgress;
-        private ImageView ivAction;
+        ImageView ivIcon;
+        TextView tvName;
+        ProgressBar pbProgress;
+        TextView tvProgress;
+        ImageView ivAction;
+        ImageView ivCanceled;
 
         public ProgressHolder(@NonNull View itemView) {
             super(itemView);
@@ -56,14 +102,32 @@ public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
             pbProgress = itemView.findViewById(R.id.pb_progress);
             ivAction = itemView.findViewById(R.id.iv_action);
             tvProgress = itemView.findViewById(R.id.tv_progress);
+            ivCanceled = itemView.findViewById(R.id.iv_cancelled);
         }
 
         @Override
         public void bind(Object index) {
-            FetchTask task = (FetchTask) index;
+            UploadTask task = (UploadTask) index;
             tvName.setText(task.name);
-            pbProgress.setProgress((int) task.progress);
+            pbProgress.setProgress(task.progress);
             tvProgress.setText(task.progress + "");
+            // 开始暂定
+            ivAction.setOnClickListener(v -> {
+                if (task.isPause) {
+                    binderController.resume(task.key);
+                    ivAction.setImageResource(R.drawable.ic_resume);
+                } else {
+                    binderController.pause(task.key);
+                    ivAction.setImageResource(R.drawable.icon_stop);
+                }
+            });
+            //取消
+            ivCanceled.setOnClickListener(v -> {
+                list.remove(getAdapterPosition());
+                binderController.canceled(task.key);
+                TableUploadTaskCRUD.getInstant().insertUploadTask(task);
+                notifyItemChanged(getAdapterPosition());
+            });
         }
     }
 }

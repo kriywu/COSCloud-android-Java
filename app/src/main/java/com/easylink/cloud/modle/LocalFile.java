@@ -1,30 +1,13 @@
 package com.easylink.cloud.modle;
 
-import java.math.BigDecimal;
 import java.util.Objects;
 
 public class LocalFile implements Comparable {
-    protected String path;
-    protected float size;
+    public String path;
+    public float size;
 
     public LocalFile(String path, float size) {
         this.path = path;
-        this.size = size;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public float getSize() {
-        return size;
-    }
-
-    public void setSize(float size) {
         this.size = size;
     }
 

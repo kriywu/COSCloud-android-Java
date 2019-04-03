@@ -29,7 +29,7 @@
         android:paddingRight="16dp">
 
         <TextView
-            android:id="@+id/tv_upload_path"
+            android:id="@+id/tv_path"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

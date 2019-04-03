@@ -29,6 +29,7 @@ public class Constant {
 
     final public static String EXTRA_PATHS = "extra_paths";
     final public static String EXTRA_PREFIX = "extra_prefix";
+    final public static String EXTRA_KEY = "extra_key";
 
     final public static int IMAGE_REQUEST_CODE = 1;
     final public static int VIDEO_REQUEST_CODE = 2;

@@ -39,7 +39,6 @@
             android:exported="true" />
 
         <activity android:name=".control.test.TestGlideActivity" />
-        <activity android:name=".control.ContentProTestActivity" />
         <activity android:name=".control.test.AActivity" />
 
         <service android:name=".control.test.TestBindService" />
@@ -51,6 +50,7 @@
             android:name=".control.test.DownloadService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name=".service.UploadBindService" />
 
         <activity android:name=".control.test.ViewActivity" />
         <activity android:name=".demos.RemoteViewsActivity" />

@@ -1,27 +1,23 @@
 package com.easylink.cloud.control;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.R2;
 import com.easylink.cloud.absolute.CommonActivity;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import androidx.fragment.app.Fragment;
-import butterknife.BindView;
-import butterknife.OnItemClick;
-
-import android.os.Handler;
-import android.util.Log;
-import android.view.MenuItem;
-import android.widget.FrameLayout;
-
 import com.easylink.cloud.control.fragment.EnjoyFragment;
 import com.easylink.cloud.control.fragment.FileFragment;
 import com.easylink.cloud.control.fragment.MeFragment;
 import com.easylink.cloud.control.fragment.NewFragment;
 import com.easylink.cloud.control.fragment.UploadFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import butterknife.BindView;
 
 
 public class MainActivity extends CommonActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +34,19 @@ public class MainActivity extends CommonActivity implements BottomNavigationView
         super.onCreate(savedInstanceState);
         navigationView.setOnNavigationItemSelectedListener(this);
         setCurrentFragment(0);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("FileFragment","activity create");
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("FileFragment","activity selected");
+        return false;
     }
 
     @Override

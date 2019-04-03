@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.easylink.cloud.MyApplication;
+import com.easylink.cloud.absolute.iDownloadListener;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
-import com.easylink.cloud.modle.FetchTask;
+import com.easylink.cloud.modle.UploadTask;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -118,49 +119,78 @@ public class Client {
         return files;
     }
 
-    /**
-     * 异步
-     */
-    public void upload(final LocalBroadcastManager broadcastManager, final FetchTask task) {
+    public List<CloudFile> queryAllFile(String bucket) {
+        List<CloudFile> files = new LinkedList<>();
+        final GetBucketRequest getBucketRequest = new GetBucketRequest(bucket);
+        getBucketRequest.setMaxKeys(1000); //单次返回的最大数量
+        // 使用同步方法
+        try {
+            GetBucketResult getBucketResult = cosXmlService.getBucket(getBucketRequest);
+            ListBucket listBucket = getBucketResult.listBucket;
+
+            // 目录
+            List<ListBucket.Contents> list2 = listBucket.contentsList;
+
+            for (ListBucket.Contents contents : list2) {
+                CloudFile file = new CloudFile(contents.key, contents.key, Constant.FILE);
+                file.setLastModify(contents.lastModified);
+                file.setSize(contents.size);
+                files.add(file);
+            }
+
+//            // 返回目录结构
+//            List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
+//            for (ListBucket.CommonPrefixes contents : list) {
+//                Log.d("Client", list.size() + "");
+//                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return files;
+    }
+
+    public void upload2(iDownloadListener listener, UploadTask task) {
         TransferConfig transferConfig = new TransferConfig.Builder().build();// 设置是否分片，分片的大小等
         //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService, transferConfig);
         String uploadId = null;//prefix + System.currentTimeMillis();//用于续传,若无,则为null
+        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(Constant.bucket, task.key, task.path, uploadId); //上传文件
+        //设置返回结果回调
 
-        COSXMLUploadTask cosxmlUploadTask = transferManager.upload(task.bucket, task.prefix + task.name, task.path, uploadId); //上传文件
-        //设置上传进度回调
-
-        // 完成的任务写入文件
-        // 没有完成的文件广播
-        // 任务ID，任务进度
         cosxmlUploadTask.setCosXmlProgressListener((complete, target) -> {
-            float progress = 1.0f * complete / target * 100;
-            Log.d("CLIENT", progress + "");
-            Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
-            task.progress = progress;
-            intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
-            broadcastManager.sendBroadcast(intent);
+            int progress = (int) (1.0 * complete / target * 100);
+            listener.onProgress(task.key, progress);
         });
 
-        //设置返回结果回调
+        new Thread(() -> {
+            while (true){
+                if (task.isPause) cosxmlUploadTask.pause();
+                if (task.isCanceled) {
+                    cosxmlUploadTask.cancel();
+                    return;
+                }
+                if (task.isResume) cosxmlUploadTask.resume();
+
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         cosxmlUploadTask.setCosXmlResultListener(new CosXmlResultListener() {
             @Override
             public void onSuccess(CosXmlRequest request, CosXmlResult result) {
                 Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
-                task.isSuccess = true;
-                task.progress = 100f;
-                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
-                broadcastManager.sendBroadcast(intent);
-                Log.d("CLIENT", "Success");
+                listener.onSuccess(task.key);
             }
 
             @Override
             public void onFail(CosXmlRequest request, CosXmlClientException exception, CosXmlServiceException serviceException) {
                 Intent intent = new Intent(Constant.BROADCAST_UPLOAD_PROGRESS);
-                task.isSuccess = false;
-                intent.putExtra(Constant.EXTRA_FETCH_TASK, task);
-                broadcastManager.sendBroadcast(intent);
-                Log.d("CLIENT", "Failed");
+                listener.onFailed(task.key);
                 exception.printStackTrace();
             }
         });

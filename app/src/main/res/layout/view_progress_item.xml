@@ -52,8 +52,15 @@
 
     <ImageView
         android:id="@+id/iv_action"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="20dp"
         android:src="@drawable/icon_stop" />
+
+    <ImageView
+        android:id="@+id/iv_cancelled"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/op_remove" />
 
 </LinearLayout>

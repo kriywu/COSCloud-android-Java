@@ -20,6 +20,10 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
 
     @Override
     protected List<CloudFile> doInBackground(Void... voids) {
+        if (builder.delimiter == null) {
+            return Client.getClient().queryAllFile(builder.bucket);
+        }
+
         if (builder.flag == 1) {
             return Client.getClient().getPath(builder.bucket, builder.prefix, builder.delimiter);
         }
@@ -37,7 +41,7 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
     public static class Builder {
         private String bucket = Constant.bucket;
         private String prefix = "";
-        private char delimiter = '/';
+        private Character delimiter = '/';
         private int flag = 0;
 
         public Builder(iQueryList callback) {
@@ -54,7 +58,7 @@ public class QueryList extends AsyncTask<Void, Void, List<CloudFile>> {
             return this;
         }
 
-        public Builder setDelimiter(char delimiter) {
+        public Builder setDelimiter(Character delimiter) {
             this.delimiter = delimiter;
             return this;
         }

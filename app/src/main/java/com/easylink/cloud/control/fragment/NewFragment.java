@@ -17,30 +17,17 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.easylink.cloud.R;
-import com.easylink.cloud.absolute.iQueryList;
-import com.easylink.cloud.control.ContentProTestActivity;
 import com.easylink.cloud.control.test.AActivity;
 import com.easylink.cloud.control.test.DownloadActivity;
 import com.easylink.cloud.control.test.TestBindService;
 import com.easylink.cloud.control.test.TestGlideActivity;
 import com.easylink.cloud.control.test.ViewActivity;
 import com.easylink.cloud.demos.RemoteViewsActivity;
-import com.easylink.cloud.modle.CloudFile;
-import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.web.Client;
-import com.easylink.cloud.web.QueryList;
-import com.tencent.cos.xml.CosXmlService;
-import com.tencent.cos.xml.CosXmlServiceConfig;
-import com.tencent.qcloud.core.auth.QCloudCredentialProvider;
-import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
-
-import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import static com.easylink.cloud.modle.Constant.secretKey;
 
 @SuppressLint("ValidFragment")
 public class NewFragment extends Fragment implements View.OnClickListener {
@@ -99,8 +86,6 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         btnRemoteViews = view.findViewById(R.id.btn_remote_view);
         btnRemoteViews.setOnClickListener(this);
 
-
-        Client.getClient();
         return view;
     }
 
@@ -135,8 +120,8 @@ public class NewFragment extends Fragment implements View.OnClickListener {
         switch (requestCode) {
             case 1:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Intent intent = new Intent(context, ContentProTestActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(context, ContentProTestActivity.class);
+                    //startActivity(intent);
                 }
         }
     }

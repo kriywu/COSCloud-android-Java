@@ -8,7 +8,7 @@ import android.util.Log;
 
 
 public class TestBindService extends Service {
-    private static final String TAG = "TestBindService";
+    private static final String TAG = "UploadBindService";
     private int progress;
     // 这里要使用静态的，不然每次开启都会产生一个新的Binder对象
     private static MyBinder binder = null;

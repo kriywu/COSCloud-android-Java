@@ -37,6 +37,7 @@ public class MediaFileClient {
                 null,
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
 
+        if (c == null) return musics;
         while (c.moveToNext()) {
             String path = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));// 路径
             String name = c.getString(c.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME)); // 歌曲名
