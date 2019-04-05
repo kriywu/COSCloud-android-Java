@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.tencent.qcloud:mtaUtils-5.4.16">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/4637ee5c53b805af99534ff555f30245/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/4637ee5c53b805af99534ff555f30245/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/d45e93ae78b37fca347ed4496e49221d/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mtaUtils-5.4.16.aar/d45e93ae78b37fca347ed4496e49221d/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

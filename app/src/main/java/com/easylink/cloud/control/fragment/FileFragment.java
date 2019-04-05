@@ -1,8 +1,12 @@
 package com.easylink.cloud.control.fragment;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
+import android.os.IBinder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,8 +17,10 @@ import android.view.ViewGroup;
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
 import com.easylink.cloud.absolute.iQueryList;
+import com.easylink.cloud.absolute.iShowDialog;
 import com.easylink.cloud.control.adapter.FileViewAdapter;
 import com.easylink.cloud.modle.CloudFile;
+import com.easylink.cloud.service.DownloadService;
 import com.easylink.cloud.web.QueryList;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 
@@ -27,14 +33,14 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class FileFragment extends BaseFragment implements iQueryList {
-    private static final String TAG = "FileFragment";
+public class FileFragment extends BaseFragment implements iQueryList, iShowDialog {
     @BindView(R.id.rv_files)
     RecyclerView recyclerView;
     @BindView(R.id.srl_flash)
@@ -49,13 +55,18 @@ public class FileFragment extends BaseFragment implements iQueryList {
     private List<CloudFile> files = new ArrayList<>();
     private Stack<String> stack = new Stack<>();
 
-    public static FileFragment newInstance() {
-        Bundle args = new Bundle();
-        FileFragment fragment = new FileFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
+    public DownloadService.MyBinder binder;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            binder = (DownloadService.MyBinder) service;
+        }
 
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,10 +83,11 @@ public class FileFragment extends BaseFragment implements iQueryList {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
-        adapter = new FileViewAdapter(getActivity(), this, (List) files);
+        adapter = new FileViewAdapter(getActivity(), this, (List) files, 0); // 表示
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         swipeRefreshLayout.setRefreshing(true);
+        getActivity().bindService(new Intent(getContext(), DownloadService.class), connection, Context.BIND_AUTO_CREATE);
 
 
         swipeRefreshLayout.setOnRefreshListener(() ->
@@ -88,7 +100,6 @@ public class FileFragment extends BaseFragment implements iQueryList {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.d("FileFragment", "fragment create");
         inflater.inflate(R.menu.menu_search, menu);
         SearchView searchView = (SearchView) menu.getItem(0).getActionView();
 
@@ -122,7 +133,6 @@ public class FileFragment extends BaseFragment implements iQueryList {
                     .setDelimiter(null)
                     .build()
                     .execute();
-            Log.d(TAG, "setOnSearchClickListener: ");
         });
 
         searchView.setOnCloseListener(() -> {
@@ -152,12 +162,11 @@ public class FileFragment extends BaseFragment implements iQueryList {
     public void updateList(List<CloudFile> fs) {
         updateUI();
         files.clear();
-
+        // 检索
         if (queryCondition != null) {
             for (CloudFile file : fs) {
-                if (file.getKey().contains(queryCondition)) files.add(file);
+                if (file.key.contains(queryCondition)) files.add(file);
             }
-            Log.d(TAG, "updatelist");
         } else {
             files.addAll(fs);
         }
@@ -190,5 +199,19 @@ public class FileFragment extends BaseFragment implements iQueryList {
                 .build()
                 .execute();
     }
+
+    @Override
+    public void show(DialogFragment dialogFragment, String tag) {
+        assert getFragmentManager() != null;
+        dialogFragment.show(getFragmentManager(), tag);
+    }
+
+    public static FileFragment newInstance() {
+        Bundle args = new Bundle();
+        FileFragment fragment = new FileFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 }
 

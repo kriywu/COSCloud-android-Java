@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
 import com.easylink.cloud.control.adapter.ProgressAdapter;
-import com.easylink.cloud.modle.UploadTask;
+import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.util.DBHelper;
 import com.easylink.cloud.util.TableUploadTaskCRUD;
 
@@ -36,7 +36,7 @@ public class HistoryFragment extends BaseFragment {
     SwipeRefreshLayout swipeRefreshLayout;
 
     private Context context;
-    private Deque<UploadTask> tasks = new LinkedList<>();
+    private Deque<Task> tasks = new LinkedList<>();
     private DBHelper dbHelper;
 
     @Override
@@ -53,7 +53,7 @@ public class HistoryFragment extends BaseFragment {
         recyclerView.setAdapter(new ProgressAdapter(context, null, tasks));
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            TableUploadTaskCRUD.getInstant().queryUploadTask((List<UploadTask>) tasks);
+            TableUploadTaskCRUD.getInstant().queryUploadTask((List<Task>) tasks);
             Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
             new Handler().postDelayed(() -> {
                 swipeRefreshLayout.setRefreshing(false);
@@ -82,7 +82,7 @@ public class HistoryFragment extends BaseFragment {
                 boolean isSucceed = cursor.getInt(cursor.getColumnIndex("isSucceed")) != 0;
                 boolean isFailed = cursor.getInt(cursor.getColumnIndex("isFailed")) != 0;
                 boolean isCanceled = cursor.getInt(cursor.getColumnIndex("isCanceled")) != 0;
-                UploadTask task = new UploadTask(id, path);
+                Task task = new Task(id, path);
                 task.name = name;
                 task.progress = progress;
                 task.isCanceled = isCanceled;

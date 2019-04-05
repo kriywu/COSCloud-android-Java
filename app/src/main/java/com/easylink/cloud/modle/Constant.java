@@ -23,9 +23,19 @@ public class Constant {
     /**
      * 文件类型，目前还只是区分文件夹和非文件夹
      */
-    public static final String DIR = "DIR";
-    public static final String FILE = "FILE";
-    public static final String TEXT = "TEXT";
+    public static final String DIR = "dir"; // 文件夹
+    public static final String FILE = "file"; // 文件
+    public static final String PHOTO = "photo"; // 照片  png gif ...
+    public static final String VIDEO = "video"; // 视频  flv mp4
+    public static final String MUSIC = "music";// mp3
+    public static final String RAR = "rar";// rar
+    public static final String ZIP = "zip";
+    public static final String TEXT = "text";
+    public static final String APK = "apk";
+    public static final String DOC = "doc";
+    public static final String EXCEL = "excel";
+    public static final String PPT = "ppt";
+    public static final String PDF = "pdf";
 
     final public static String EXTRA_PATHS = "extra_paths";
     final public static String EXTRA_PREFIX = "extra_prefix";

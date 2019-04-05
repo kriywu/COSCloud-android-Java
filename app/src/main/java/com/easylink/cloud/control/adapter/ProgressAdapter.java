@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BindHolder;
 import com.easylink.cloud.absolute.iUploadBinderController;
-import com.easylink.cloud.modle.UploadTask;
+import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.util.TableUploadTaskCRUD;
 
 import java.util.Deque;
@@ -21,21 +21,19 @@ import java.util.LinkedList;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static com.easylink.cloud.R.drawable.ic_resume;
-
 public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
     private static final String TAG = "ProgressAdapter";
     private Context context ;
     private iUploadBinderController binderController = null;
-    private LinkedList<UploadTask> list;
+    private LinkedList<Task> list;
 
-    public ProgressAdapter(Context context, iUploadBinderController callback, Deque<UploadTask> list) {
+    public ProgressAdapter(Context context, iUploadBinderController callback, Deque<Task> list) {
         this.context = context;
         binderController = callback;
-        this.list = (LinkedList<UploadTask>) list;
+        this.list = (LinkedList<Task>) list;
     }
 
-    public void setData(LinkedList<UploadTask> tasks) {
+    public void setData(LinkedList<Task> tasks) {
         this.list = tasks;
     }
 
@@ -77,7 +75,7 @@ public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
 
         @Override
         public void bind(Object index) {
-            UploadTask task = (UploadTask) index;
+            Task task = (Task) index;
             tvName.setText(task.name);
             ivCanceled.setOnClickListener(v -> {
                 list.remove(getAdapterPosition());
@@ -107,7 +105,7 @@ public class ProgressAdapter extends RecyclerView.Adapter<BindHolder> {
 
         @Override
         public void bind(Object index) {
-            UploadTask task = (UploadTask) index;
+            Task task = (Task) index;
             tvName.setText(task.name);
             pbProgress.setProgress(task.progress);
             tvProgress.setText(task.progress + "");

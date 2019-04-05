@@ -1,9 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: com.qq.mta:mta-3.4.7-release">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e567a89e6c4ba4557853b8e5d0fca2d6/jars/libs/mta-android-sdk-3.4.7.jar!/" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e567a89e6c4ba4557853b8e5d0fca2d6/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e567a89e6c4ba4557853b8e5d0fca2d6/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e16f7d081aed42bb9feb30846b22ff07/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e16f7d081aed42bb9feb30846b22ff07/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/mta-3.4.7-release.aar/e16f7d081aed42bb9feb30846b22ff07/jars/libs/mta-android-sdk-3.4.7.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

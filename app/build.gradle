@@ -58,4 +58,7 @@ dependencies {
 
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    // 可放大缩小的Photo View
+    implementation 'com.github.chrisbanes:PhotoView:2.3.0'
 }

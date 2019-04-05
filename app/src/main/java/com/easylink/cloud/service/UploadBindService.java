@@ -5,9 +5,8 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
-import com.easylink.cloud.absolute.iDownloadListener;
-import com.easylink.cloud.modle.UploadTask;
-import com.easylink.cloud.util.DBHelper;
+import com.easylink.cloud.absolute.iUploadListener;
+import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.util.TableUploadTaskCRUD;
 import com.easylink.cloud.web.Client;
 
@@ -17,10 +16,9 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 
-public class UploadBindService extends Service implements iDownloadListener {
+public class UploadBindService extends Service implements iUploadListener {
     private Executor executor = Executors.newFixedThreadPool(4);
-    private static final String TAG = "UploadBindService";
-    private Deque<UploadTask> tasks = new LinkedList<>();
+    private Deque<Task> tasks = new LinkedList<>();
     private static MyBinder binder = null;
 
     @Override
@@ -33,7 +31,7 @@ public class UploadBindService extends Service implements iDownloadListener {
 
     @Override
     public void onProgress(String key, int progress) {
-        for (UploadTask task : tasks) {
+        for (Task task : tasks) {
             if (task.key.equals(key)) {
                 task.progress = progress;
             }
@@ -42,37 +40,37 @@ public class UploadBindService extends Service implements iDownloadListener {
 
     @Override
     public void onSuccess(String key) {
-        for (UploadTask task : tasks) {
+        for (Task task : tasks) {
             if (task.key.equals(key)) {
                 task.isSuccess = true;
                 TableUploadTaskCRUD.getInstant().insertUploadTask(task);
             }
         }
-        tasks.remove(new UploadTask(key));
+        tasks.remove(new Task(key));
     }
 
     @Override
     public void onFailed(String key) {
-        for (UploadTask task : tasks) {
+        for (Task task : tasks) {
             if (task.key.equals(key)) {
                 task.isFailed = true;
                 TableUploadTaskCRUD.getInstant().insertUploadTask(task);
             }
         }
-        tasks.remove(new UploadTask(key));
+        tasks.remove(new Task(key));
     }
 
     public class MyBinder extends Binder {
 
         public void addTask(String key, String path) {
-            UploadTask task = new UploadTask(key, path);
+            Task task = new Task(key, path);
             tasks.offer(task);
-            executor.execute(() -> Client.getClient().upload2(UploadBindService.this, task));
+            executor.execute(() -> Client.getClient().upload(UploadBindService.this, task));
         }
 
         public void pauseTask(String key) {
 
-            for (UploadTask task : tasks) {
+            for (Task task : tasks) {
                 if (task.key.equals(key)) {
                     task.isPause = true;
                     task.isResume = false;
@@ -81,7 +79,7 @@ public class UploadBindService extends Service implements iDownloadListener {
         }
 
         public void resumeTask(String key) {
-            for (UploadTask task : tasks) {
+            for (Task task : tasks) {
                 if (task.key.equals(key)) {
                     task.isPause = false;
                     task.isResume = true;
@@ -90,28 +88,18 @@ public class UploadBindService extends Service implements iDownloadListener {
         }
 
         public void canceledTask(String key) {
-            for (UploadTask task : tasks) {
+            for (Task task : tasks) {
                 if (task.key.equals(key)) {
                     task.isCanceled = true;
                     TableUploadTaskCRUD.getInstant().insertUploadTask(task);
                 }
             }
-            tasks.remove(new UploadTask(key));
+            tasks.remove(new Task(key));
         }
 
 
-        public Deque<UploadTask> findTask() {
+        public Deque<Task> findTask() {
             return tasks;
         }
-    }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
     }
 }

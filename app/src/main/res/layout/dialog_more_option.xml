@@ -53,6 +53,20 @@
         android:text="  复制url" />
 
     <TextView
+        android:id="@+id/tv_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:drawableStart="@drawable/op_download"
+        android:text="  下载" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_margin="4dp"
+        android:background="@color/colorAccent" />
+
+    <TextView
         android:id="@+id/tv_op_remove"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

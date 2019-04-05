@@ -6,4 +6,8 @@ public interface iDownloadListener {
     void onSuccess(String key);
 
     void onFailed(String key);
+
+    void onPaused(String key);
+
+    void onCanceled(String key);
 }

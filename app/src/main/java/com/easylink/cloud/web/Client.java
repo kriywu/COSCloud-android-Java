@@ -4,10 +4,11 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.easylink.cloud.MyApplication;
-import com.easylink.cloud.absolute.iDownloadListener;
+import com.easylink.cloud.absolute.iUploadListener;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
-import com.easylink.cloud.modle.UploadTask;
+import com.easylink.cloud.modle.Task;
+import com.easylink.cloud.util.FileTypeUtil;
 import com.tencent.cos.xml.CosXmlService;
 import com.tencent.cos.xml.CosXmlServiceConfig;
 import com.tencent.cos.xml.exception.CosXmlClientException;
@@ -29,8 +30,6 @@ import com.tencent.qcloud.core.auth.ShortTimeCredentialProvider;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import static com.easylink.cloud.modle.Constant.secretKey;
 
@@ -68,21 +67,25 @@ public class Client {
         try {
             GetBucketResult getBucketResult = cosXmlService.getBucket(getBucketRequest);
             ListBucket listBucket = getBucketResult.listBucket;
-            // 返回目录结构
+            // 文件夹
             List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
             for (ListBucket.CommonPrefixes contents : list) {
-                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
+                String s = contents.prefix.substring(0, contents.prefix.length() - 1);
+                String name = s.contains("/") ? s.substring(s.indexOf('/') + 1) : s;
+                files.add(new CloudFile(contents.prefix, name, Constant.DIR));
             }
 
-            // 目录
+            // 文件
             List<ListBucket.Contents> list2 = listBucket.contentsList;
 
             for (ListBucket.Contents contents : list2) {
                 if (contents.key.equals(prefix)) continue;
 
-                CloudFile file = new CloudFile(contents.key, contents.key, Constant.FILE);
-                file.setLastModify(contents.lastModified);
-                file.setSize(contents.size);
+                CloudFile file = new CloudFile(contents.key,
+                        FileTypeUtil.recognizeName(contents.key),
+                        FileTypeUtil.recognizeType(contents.key));
+                file.lastModify = contents.lastModified;
+                file.size = contents.size;
                 files.add(file);
             }
         } catch (Exception e) {
@@ -110,8 +113,9 @@ public class Client {
             // 返回目录结构
             List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
             for (ListBucket.CommonPrefixes contents : list) {
-                Log.d("Client", list.size() + "");
-                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
+                String s = contents.prefix.substring(0, contents.prefix.length() - 1);
+                String name = s.contains("/") ? s.substring(s.indexOf('/') + 1) : s;
+                files.add(new CloudFile(contents.prefix, name, Constant.DIR));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -132,25 +136,20 @@ public class Client {
             List<ListBucket.Contents> list2 = listBucket.contentsList;
 
             for (ListBucket.Contents contents : list2) {
-                CloudFile file = new CloudFile(contents.key, contents.key, Constant.FILE);
-                file.setLastModify(contents.lastModified);
-                file.setSize(contents.size);
+                CloudFile file = new CloudFile(contents.key,
+                        FileTypeUtil.recognizeName(contents.key),
+                        FileTypeUtil.recognizeType(contents.key));
+                file.lastModify = contents.lastModified;
+                file.size = contents.size;
                 files.add(file);
             }
-
-//            // 返回目录结构
-//            List<ListBucket.CommonPrefixes> list = listBucket.commonPrefixesList;
-//            for (ListBucket.CommonPrefixes contents : list) {
-//                Log.d("Client", list.size() + "");
-//                files.add(new CloudFile(contents.prefix, contents.prefix, Constant.DIR));
-//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return files;
     }
 
-    public void upload2(iDownloadListener listener, UploadTask task) {
+    public void upload(iUploadListener listener, Task task) {
         TransferConfig transferConfig = new TransferConfig.Builder().build();// 设置是否分片，分片的大小等
         //初始化 TransferManager
         TransferManager transferManager = new TransferManager(cosXmlService, transferConfig);
@@ -164,7 +163,7 @@ public class Client {
         });
 
         new Thread(() -> {
-            while (true){
+            while (true) {
                 if (task.isPause) cosxmlUploadTask.pause();
                 if (task.isCanceled) {
                     cosxmlUploadTask.cancel();
@@ -196,7 +195,7 @@ public class Client {
         });
 
         //设置任务状态回调, 可以查看任务过程
-        cosxmlUploadTask.setTransferStateListener(state -> Log.d("TEST", "Task state:" + state.name()));
+        cosxmlUploadTask.setTransferStateListener(state -> Log.d("TEST", "Task type:" + state.name()));
     }
 
     /**

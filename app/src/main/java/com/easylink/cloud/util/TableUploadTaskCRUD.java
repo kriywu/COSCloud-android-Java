@@ -5,11 +5,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.easylink.cloud.MyApplication;
-import com.easylink.cloud.modle.UploadTask;
-import com.tencent.cos.xml.model.tag.ListMultipartUploads;
+import com.easylink.cloud.modle.Task;
 
 import java.util.List;
-import java.util.Objects;
 
 public class TableUploadTaskCRUD {
     private static TableUploadTaskCRUD tableUploadTaskCRUD;
@@ -30,7 +28,7 @@ public class TableUploadTaskCRUD {
         return tableUploadTaskCRUD;
     }
 
-    public void queryUploadTask(List<UploadTask> tasks) {
+    public void queryUploadTask(List<Task> tasks) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         Cursor cursor = db.query(DBHelper.UPLOAD_HISTORY, null, null, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -42,7 +40,7 @@ public class TableUploadTaskCRUD {
                 boolean isSucceed = cursor.getInt(cursor.getColumnIndex("isSucceed")) != 0;
                 boolean isFailed = cursor.getInt(cursor.getColumnIndex("isFailed")) != 0;
                 boolean isCanceled = cursor.getInt(cursor.getColumnIndex("isCanceled")) != 0;
-                UploadTask task = new UploadTask(id, path);
+                Task task = new Task(id, path);
                 task.name = name;
                 task.progress = progress;
                 task.isCanceled = isCanceled;
@@ -54,7 +52,7 @@ public class TableUploadTaskCRUD {
         }
     }
 
-    public void insertUploadTask(UploadTask task) {
+    public void insertUploadTask(Task task) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("id", task.ID);
@@ -68,7 +66,7 @@ public class TableUploadTaskCRUD {
         db.close();
     }
 
-    public void removeUploadTask(UploadTask task){
+    public void removeUploadTask(Task task){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.delete(DBHelper.UPLOAD_HISTORY,"ID = ?",new String[]{task.ID});
         db.close();

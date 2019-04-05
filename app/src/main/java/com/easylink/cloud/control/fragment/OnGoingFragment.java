@@ -18,7 +18,7 @@ import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
 import com.easylink.cloud.absolute.iUploadBinderController;
 import com.easylink.cloud.control.adapter.ProgressAdapter;
-import com.easylink.cloud.modle.UploadTask;
+import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.service.UploadBindService;
 
 import java.util.Deque;
@@ -42,7 +42,7 @@ public class OnGoingFragment extends BaseFragment implements iUploadBinderContro
     private Context context;
     private UploadBindService.MyBinder binder = null;
     private ProgressAdapter adapter;
-    private Deque<UploadTask> tasks = null;
+    private Deque<Task> tasks = null;
 
     @SuppressLint("HandlerLeak")
     private
@@ -51,7 +51,7 @@ public class OnGoingFragment extends BaseFragment implements iUploadBinderContro
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             tasks = binder.findTask();
-            LinkedList<UploadTask> linkedList = (LinkedList<UploadTask>) tasks;
+            LinkedList<Task> linkedList = (LinkedList<Task>) tasks;
             Log.d(TAG, "handleMessage: " + tasks.size());
 
             adapter.setData(linkedList);

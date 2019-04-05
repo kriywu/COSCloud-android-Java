@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="Gradle: com.tencent.qcloud:logUtils-5.4.16">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/logUtils-5.4.16.aar/dceaa0596c0b4b0940a56ac9d89167fc/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/logUtils-5.4.16.aar/dceaa0596c0b4b0940a56ac9d89167fc/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-logUtils-5.4.16.aar/b8f3257c2bafff7cdbb2b782e875b2ab/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/jetified-logUtils-5.4.16.aar/b8f3257c2bafff7cdbb2b782e875b2ab/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

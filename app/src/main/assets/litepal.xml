@@ -21,7 +21,7 @@
     	</list>
     -->
     <list>
-        <mapping class="com.easylink.cloud.modle.UploadTask"/>
+        <mapping class="com.easylink.cloud.modle.Task"/>
     </list>
 
 </litepal>

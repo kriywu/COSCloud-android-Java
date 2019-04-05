@@ -33,12 +33,9 @@ public class PathPopWindow extends CustomPopupWindow implements iQueryList {
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         new QueryList.Builder(this).setFlag(1).build().execute();
 
-        btnAck.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((iSetUploadPath) mContext).setPath(etPath.getText().toString());
-                mPopupWindow.dismiss();
-            }
+        btnAck.setOnClickListener(v -> {
+            ((iSetUploadPath) mContext).setPath(etPath.getText().toString());
+            mPopupWindow.dismiss();
         });
     }
 

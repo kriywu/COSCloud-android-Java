@@ -10,7 +10,7 @@ import java.util.Date;
 import java.util.Objects;
 
 //extends LitePalSupport
-public class UploadTask extends LitePalSupport implements Comparable<UploadTask>, Parcelable {
+public class Task extends LitePalSupport implements Comparable<Task>, Parcelable {
 
     public String ID; // prefix+?+path+?+currentTime
     public String key;
@@ -25,11 +25,11 @@ public class UploadTask extends LitePalSupport implements Comparable<UploadTask>
     public boolean isFailed;
     public int progress;
 
-    public UploadTask(String key) {
+    public Task(String key) {
         this.ID = key;
     }
 
-    public UploadTask(String key, String path) {
+    public Task(String key, String path) {
         this.key = key;
         this.path = path;
         name = path.substring(path.lastIndexOf(File.separator));
@@ -41,7 +41,7 @@ public class UploadTask extends LitePalSupport implements Comparable<UploadTask>
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UploadTask that = (UploadTask) o;
+        Task that = (Task) o;
         return Objects.equals(ID, that.ID);
     }
 
@@ -51,7 +51,7 @@ public class UploadTask extends LitePalSupport implements Comparable<UploadTask>
         return Objects.hash(ID);
     }
 
-    protected UploadTask(Parcel in) {
+    protected Task(Parcel in) {
         ID = in.readString();
         key = in.readString();
         path = in.readString();
@@ -62,15 +62,15 @@ public class UploadTask extends LitePalSupport implements Comparable<UploadTask>
         isResume = in.readByte() != 0;
     }
 
-    public static final Creator<UploadTask> CREATOR = new Creator<UploadTask>() {
+    public static final Creator<Task> CREATOR = new Creator<Task>() {
         @Override
-        public UploadTask createFromParcel(Parcel in) {
-            return new UploadTask(in);
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
         }
 
         @Override
-        public UploadTask[] newArray(int size) {
-            return new UploadTask[size];
+        public Task[] newArray(int size) {
+            return new Task[size];
         }
     };
 
@@ -92,7 +92,7 @@ public class UploadTask extends LitePalSupport implements Comparable<UploadTask>
     }
 
     @Override
-    public int compareTo(UploadTask o) {
+    public int compareTo(Task o) {
         return 0;
     }
 }

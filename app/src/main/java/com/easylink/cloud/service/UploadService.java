@@ -8,13 +8,9 @@ import android.os.IBinder;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import android.widget.Toast;
 
-import com.easylink.cloud.modle.UploadTask;
-import com.easylink.cloud.util.StaticHelper;
-import com.easylink.cloud.web.Client;
 import com.easylink.cloud.modle.Constant;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class UploadService extends Service {
     private int sumSize = 0;
@@ -35,7 +31,7 @@ public class UploadService extends Service {
         broadcastManager = LocalBroadcastManager.getInstance(this);
 
         for (String p : paths) {
-            //UploadTask task = new UploadTask(StaticHelper.geneTaskID(Constant.bucket, prefix, p, new Date()));
+            //Task task = new Task(StaticHelper.geneTaskID(Constant.bucket, prefix, p, new Date()));
 
             //Client.getClient().upload(broadcastManager,task); // bucket prefix path
         }
