@@ -1,5 +1,6 @@
 package com.easylink.cloud.control.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -11,15 +12,17 @@ import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
-import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.service.DownloadService;
 import com.google.android.material.appbar.AppBarLayout;
 
 import java.util.List;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -44,21 +47,24 @@ public class NewFragment extends BaseFragment {
     private Context context;
     private static List<Task> tasks;
     private static DownloadService.MyBinder binder;
-    private static MyHandler handler = new MyHandler();
+    private MyHandler handler = new MyHandler();
 
-    static class MyHandler extends Handler{
+    @SuppressLint("HandlerLeak")
+    class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             tasks = binder.findTask();
-            handler.sendEmptyMessageDelayed(1,500);
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyDataSetChanged();
+            handler.sendEmptyMessageDelayed(1, 500);
         }
     }
+
     private ServiceConnection connection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             binder = (DownloadService.MyBinder) service;
-            handler.sendEmptyMessageDelayed(1,500);
+            handler.sendEmptyMessageDelayed(1, 500);
         }
 
         @Override
@@ -71,30 +77,46 @@ public class NewFragment extends BaseFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        recyclerView.setAdapter(new RecyclerView.Adapter() {
+        recyclerView.setAdapter(new RecyclerView.Adapter<NewViewHolder>() {
             @NonNull
             @Override
-            public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                return null;
+            public NewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                View view = inflater.inflate(R.layout.view_new_download, parent, false);
+                return new NewViewHolder(view);
             }
 
             @Override
-            public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+            public void onBindViewHolder(@NonNull NewViewHolder holder, int position) {
+                holder.bind(position);
             }
 
             @Override
             public int getItemCount() {
-                return 0;
+                return tasks.size();
             }
         });
         return view;
     }
 
-    class NewViewHolder extends RecyclerView.ViewHolder{
+    class NewViewHolder extends RecyclerView.ViewHolder {
+        ImageView ivIcon;
+        TextView tvName;
+        TextView tvDate;
+        TextView tvSize;
 
-        public NewViewHolder(@NonNull View itemView) {
+        NewViewHolder(@NonNull View itemView) {
             super(itemView);
+            ivIcon = itemView.findViewById(R.id.iv_icon);
+            tvName = itemView.findViewById(R.id.tv_name);
+            tvDate = itemView.findViewById(R.id.tv_date);
+            tvSize = itemView.findViewById(R.id.tv_size);
+        }
+
+        void bind(int i) {
+            ivIcon.setImageResource(R.drawable.icon_file);
+            tvName.setText(tasks.get(i).name);
+            tvDate.setText(tasks.get(i).date.toString());
+            tvSize.setText(String.valueOf(tasks.get(i)));
         }
     }
 

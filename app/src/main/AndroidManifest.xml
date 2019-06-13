@@ -20,7 +20,7 @@
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".control.MainActivity"
+            android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,21 +38,21 @@
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".control.test.TestGlideActivity" />
-        <activity android:name=".control.test.AActivity" />
+        <activity android:name=".test.TestGlideActivity" />
+        <activity android:name=".test.AActivity" />
 
-        <service android:name=".control.test.TestBindService" />
-        <service android:name=".control.test.TestService" />
+        <service android:name=".test.TestBindService" />
+        <service android:name=".test.TestService" />
 
-        <activity android:name=".control.test.DownloadActivity" />
+        <activity android:name=".test.DownloadActivity" />
 
         <service
-            android:name=".control.test.DownloadService"
+            android:name=".test.DownloadService"
             android:enabled="true"
             android:exported="true" />
         <service android:name=".service.UploadBindService" />
 
-        <activity android:name=".control.test.ViewActivity" />
+        <activity android:name=".test.ViewActivity" />
         <activity android:name=".demos.RemoteViewsActivity" />
 
         <!-- <receiver android:name=".demos.MyAppWidgetProvider"> -->
