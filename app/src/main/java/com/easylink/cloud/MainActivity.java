@@ -2,8 +2,12 @@ package com.easylink.cloud;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 
 import com.easylink.cloud.absolute.CommonActivity;
 import com.easylink.cloud.control.FragmentFactory;
@@ -14,55 +18,36 @@ import com.easylink.cloud.control.fragment.NewFragment;
 import com.easylink.cloud.control.fragment.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
+import java.util.HashMap;
+import java.util.Map;
+
 import butterknife.BindView;
 
 
 public class MainActivity extends CommonActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "MainActivity";
-    static Class[] clzs;
-    static {
-        clzs = new Class[5];
-        clzs[0] = NewFragment.class;
-        clzs[1] = FileFragment.class;
-        clzs[2] = UploadFragment.class;
-        clzs[3] = EnjoyFragment.class;
-        clzs[4] = MeFragment.class;
-    }
-    private Fragment[] fragments = new Fragment[5];
-    private int currentFragmentIndex = -1;
-    //private Fragment currentFragment;
+    private static SparseArray<Class> clzs = new SparseArray<>(5);    //  /spɑːs/
+    private Map<Class, Fragment> fragmentMap = new HashMap<>();
 
+    static {
+        clzs.put(R.id.nav_new, NewFragment.class);
+        clzs.put(R.id.nav_file, FileFragment.class);
+        clzs.put(R.id.nav_add, UploadFragment.class);
+        clzs.put(R.id.nav_enjoy, EnjoyFragment.class);
+        clzs.put(R.id.nav_me, MeFragment.class);
+    }
+
+    private Class lastClz = null;
     @BindView(R2.id.navigation)
     BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState == null){
-            setCurrentFragment(0);
+        if (savedInstanceState == null) {
+            setFragment(NewFragment.class);
         }
         navigationView.setOnNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d("FileFragment","activity create");
-        return super.onCreateOptionsMenu(menu);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d("FileFragment","activity selected");
-        return false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
     @Override
@@ -72,47 +57,35 @@ public class MainActivity extends CommonActivity implements BottomNavigationView
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        switch (menuItem.getItemId()) {
-            case R.id.nav_new:
-                setCurrentFragment(0);
-                return true;
-            case R.id.nav_file:
-                setCurrentFragment(1);
-                return true;
-            case R.id.nav_add:
-                setCurrentFragment(2);
-                return true;
-            case R.id.nav_enjoy:
-                setCurrentFragment(3);
-                return true;
-            case R.id.nav_me:
-                setCurrentFragment(4);
-                return true;
-        }
-        return false;
+        setFragment(clzs.get(menuItem.getItemId()));
+        return true;
     }
 
-    /**
-     * @param index 被点击的Fragment索引
-     *              index
-     */
-    private void setCurrentFragment(int index) {
-        Log.d(TAG, "setCurrentFragment: " + index);
-        if (fragments[index] == null) {
-            fragments[index] = FragmentFactory.create(clzs[index]);
-            getSupportFragmentManager().beginTransaction().add(R.id.content,fragments[index]).commit();
+    private void setFragment(Class clz) {
+        if (!fragmentMap.containsKey(clz)) {
+            fragmentMap.put(clz, FragmentFactory.create(clz));
+            getSupportFragmentManager().beginTransaction().add(R.id.content, fragmentMap.get(clz)).commit();
         }
         // 初始化
-        if(currentFragmentIndex == -1) {
-            currentFragmentIndex = index;
-            return;
+        if (lastClz == null) {
+
+        } else if (lastClz != clz) {
+            getSupportFragmentManager().beginTransaction().hide(fragmentMap.get(lastClz)).show(fragmentMap.get(clz)).commit();
         }
-        // 没有重复点击
-        if(currentFragmentIndex != index){
-            getSupportFragmentManager().beginTransaction().hide(fragments[currentFragmentIndex]).show(fragments[index]).commit();
-            return;
-        }
-        currentFragmentIndex = index;
+        lastClz = clz;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d("FileFragment", "activity create");
+        return super.onCreateOptionsMenu(menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d("FileFragment", "activity selected");
+        return false;
     }
 
 }
