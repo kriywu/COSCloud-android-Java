@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.fragment;
+package com.easylink.cloud.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

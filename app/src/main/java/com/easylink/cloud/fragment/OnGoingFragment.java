@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.fragment;
+package com.easylink.cloud.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
 import com.easylink.cloud.absolute.iUploadBinderController;
-import com.easylink.cloud.control.adapter.ProgressAdapter;
+import com.easylink.cloud.adapter.ProgressAdapter;
 import com.easylink.cloud.modle.Task;
 import com.easylink.cloud.service.UploadBindService;
 

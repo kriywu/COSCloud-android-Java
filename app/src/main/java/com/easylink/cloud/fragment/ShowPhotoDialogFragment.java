@@ -1,9 +1,12 @@
-package com.easylink.cloud.control.fragment;
+package com.easylink.cloud.fragment;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
@@ -42,15 +45,18 @@ public class ShowPhotoDialogFragment extends DialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        super.onActivityCreated(savedInstanceState);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0x00000000));
         getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        super.onActivityCreated(savedInstanceState);
+
     }
 
     @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view = LayoutInflater.from(getContext()).inflate(R.layout.view_photo, null);
         PhotoView photoView = view.findViewById(R.id.photo_view);
+        WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
+        photoView.setMinimumHeight(windowManager.getDefaultDisplay().getHeight());
         assert getArguments() != null;
         Glide.with(this).load(getArguments().getString("URL"))
                 .into(new SimpleTarget<Drawable>() {

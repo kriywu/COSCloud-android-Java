@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.adapter;
+package com.easylink.cloud.adapter;
 
 import android.app.Activity;
 import android.content.Context;

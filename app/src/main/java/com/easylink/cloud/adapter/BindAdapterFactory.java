@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.adapter;
+package com.easylink.cloud.adapter;
 
 import com.easylink.cloud.absolute.BindHolder;
 

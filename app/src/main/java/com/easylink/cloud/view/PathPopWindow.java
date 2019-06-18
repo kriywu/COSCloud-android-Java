@@ -2,14 +2,14 @@ package com.easylink.cloud.view;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.absolute.iSetUploadPath;
-import com.easylink.cloud.control.adapter.FileViewAdapter;
+import com.easylink.cloud.adapter.FileViewAdapter;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.absolute.CustomPopupWindow;
 import com.easylink.cloud.web.QueryList;

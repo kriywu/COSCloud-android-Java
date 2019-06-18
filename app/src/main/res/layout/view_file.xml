@@ -19,6 +19,8 @@
             android:id="@+id/iv_icon"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:layout_margin="8dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/icon_file" />
 
         <LinearLayout

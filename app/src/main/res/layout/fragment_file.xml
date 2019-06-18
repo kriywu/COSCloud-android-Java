@@ -8,14 +8,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/sv_file"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="8dp"
+            android:background="@drawable/shape_search_view"
+            app:iconifiedByDefault="false"
+
             app:layout_scrollFlags="snap|enterAlways|scroll"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            app:title="目录"
-            app:titleTextColor="@color/white" />
+            app:queryHint="MP4" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

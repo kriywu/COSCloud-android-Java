@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment;
 
 import com.easylink.cloud.absolute.CommonActivity;
 import com.easylink.cloud.control.FragmentFactory;
-import com.easylink.cloud.control.fragment.EnjoyFragment;
-import com.easylink.cloud.control.fragment.FileFragment;
-import com.easylink.cloud.control.fragment.MeFragment;
-import com.easylink.cloud.control.fragment.NewFragment;
-import com.easylink.cloud.control.fragment.UploadFragment;
+import com.easylink.cloud.fragment.EnjoyFragment;
+import com.easylink.cloud.fragment.FileFragment;
+import com.easylink.cloud.fragment.MeFragment;
+import com.easylink.cloud.fragment.NewFragment;
+import com.easylink.cloud.fragment.UploadFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.HashMap;
@@ -87,5 +87,4 @@ public class MainActivity extends CommonActivity implements BottomNavigationView
         Log.d("FileFragment", "activity selected");
         return false;
     }
-
 }

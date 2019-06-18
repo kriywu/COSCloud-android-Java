@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.adapter;
+package com.easylink.cloud.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.fragment;
+package com.easylink.cloud.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;

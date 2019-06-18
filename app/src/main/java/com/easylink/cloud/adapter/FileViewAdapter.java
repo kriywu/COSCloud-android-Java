@@ -1,4 +1,4 @@
-package com.easylink.cloud.control.adapter;
+package com.easylink.cloud.adapter;
 
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
@@ -22,8 +22,8 @@ import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BindHolder;
 import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.absolute.iShowDialog;
-import com.easylink.cloud.control.fragment.FileFragment;
-import com.easylink.cloud.control.fragment.ShowPhotoDialogFragment;
+import com.easylink.cloud.fragment.FileFragment;
+import com.easylink.cloud.fragment.ShowPhotoDialogFragment;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.util.FileTypeUtil;
@@ -38,13 +38,15 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import butterknife.BindView;
+
 import static com.google.android.material.snackbar.Snackbar.LENGTH_SHORT;
 
 public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
     private Context context;
     private iQueryList callBack;
     private List data;
-    private int FLAG; // viewHolder的类型 1 ,2,3,4
+    private int FLAG; // viewHolder的类型 1,2,3,4
     private RecyclerView.Adapter adapter;
 
     public FileViewAdapter(Context context, iQueryList callBack, List<Object> data, int FLAG) {
@@ -60,8 +62,8 @@ public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
     @Override
     public BindHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(context).inflate(R.layout.view_file, viewGroup, false);
-        if (FLAG == 0) return new EFileHolder(view);
-        else return new PathHolder(view);
+        if (FLAG == 0) return new CloudFileHolder(view);
+        else return new LocalFileHolder(view);
     }
 
     @Override
@@ -75,24 +77,27 @@ public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
         return data == null ? 0 : data.size();
     }
 
-    // 列表页面
-    class EFileHolder extends BindHolder {
-        private String url;
-        private TextView tvName;
-        private ImageView imageView;
-        private ImageView ivMore;
+    /**
+     * 云盘的文件Holder
+     */
+    class CloudFileHolder extends BindHolder {
+        String url;
+        @BindView(R.id.tv_filename)
+        TextView tvName;
+        @BindView(R.id.iv_icon)
+        ImageView imageView;
+        @BindView(R.id.iv_more)
+        ImageView ivMore;
 
-        EFileHolder(@NonNull View itemView) {
+        CloudFileHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tv_filename);
-            imageView = itemView.findViewById(R.id.iv_icon);
-            ivMore = itemView.findViewById(R.id.iv_more);
         }
 
         @Override
         public void bind(Object index) {
             final CloudFile file = (CloudFile) index;
             tvName.setText(file.name);
+
             if (!file.type.equals(Constant.PHOTO))
                 imageView.setImageResource(FileTypeUtil.getIconByFileType(file.type));
             else {
@@ -194,17 +199,16 @@ public class FileViewAdapter extends RecyclerView.Adapter<BindHolder> {
         }
     }
 
-    class PathHolder extends BindHolder {
-        private TextView textView;
-        private ImageView imageView;
-        private ImageView ivMore;
+    class LocalFileHolder extends BindHolder {
+        @BindView(R.id.tv_filename)
+        TextView textView;
+        @BindView(R.id.iv_icon)
+        ImageView imageView;
+        @BindView(R.id.iv_more)
+        ImageView ivMore;
 
-        PathHolder(@NonNull View itemView) {
+        LocalFileHolder(@NonNull View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.tv_filename);
-            imageView = itemView.findViewById(R.id.iv_icon);
-            ivMore = itemView.findViewById(R.id.iv_more);
-            ivMore.setVisibility(View.INVISIBLE);
         }
 
         public void bind(Object index) {

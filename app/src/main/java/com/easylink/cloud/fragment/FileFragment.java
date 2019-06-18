@@ -1,9 +1,10 @@
-package com.easylink.cloud.control.fragment;
+package com.easylink.cloud.fragment;
 
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -18,7 +19,7 @@ import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.BaseFragment;
 import com.easylink.cloud.absolute.iQueryList;
 import com.easylink.cloud.absolute.iShowDialog;
-import com.easylink.cloud.control.adapter.FileViewAdapter;
+import com.easylink.cloud.adapter.FileViewAdapter;
 import com.easylink.cloud.modle.CloudFile;
 import com.easylink.cloud.service.DownloadService;
 import com.easylink.cloud.web.QueryList;
@@ -47,8 +48,8 @@ public class FileFragment extends BaseFragment implements iQueryList, iShowDialo
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.fa_back)
     FloatingActionButton fbBack;
-    @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    @BindView(R.id.sv_file)
+    SearchView searchView;
 
     private String queryCondition = null;
     private FileViewAdapter adapter;
@@ -80,7 +81,6 @@ public class FileFragment extends BaseFragment implements iQueryList, iShowDialo
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
 
         adapter = new FileViewAdapter(getActivity(), this, (List) files, 0); // 表示
@@ -95,14 +95,15 @@ public class FileFragment extends BaseFragment implements iQueryList, iShowDialo
         );
 
         updateUI();
+        initSearchView();
         return view;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_search, menu);
-        SearchView searchView = (SearchView) menu.getItem(0).getActionView();
-
+    private void initSearchView(){
+        View underline = searchView.findViewById(R.id.search_plate);
+        if (underline != null) {
+            underline.setBackgroundColor(Color.TRANSPARENT);
+        }
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -140,12 +141,6 @@ public class FileFragment extends BaseFragment implements iQueryList, iShowDialo
             new QueryList.Builder(FileFragment.this).setPrefix(stack.peek()).build().execute();
             return true;
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return true;
-
     }
 
     @Override

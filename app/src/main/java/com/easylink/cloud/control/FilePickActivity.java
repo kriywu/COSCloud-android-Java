@@ -18,7 +18,7 @@ import com.easylink.cloud.R;
 import com.easylink.cloud.absolute.CommonActivity;
 import com.easylink.cloud.absolute.iPickPhoto;
 import com.easylink.cloud.absolute.iSetUploadPath;
-import com.easylink.cloud.control.adapter.FilePickAdapter;
+import com.easylink.cloud.adapter.FilePickAdapter;
 import com.easylink.cloud.modle.Constant;
 import com.easylink.cloud.modle.LocalFile;
 import com.easylink.cloud.service.UploadBindService;
